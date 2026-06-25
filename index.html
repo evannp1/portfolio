@@ -1,1 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon Portfolio</title>
 
+<style>
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#111;
+    font-family:Arial,sans-serif;
+}
+
+.card{
+    width:350px;
+    border-radius:20px;
+    overflow:hidden;
+    cursor:pointer;
+    transition:transform 0.1s;
+    box-shadow:0 20px 40px rgba(0,0,0,0.4);
+}
+
+.card img{
+    width:100%;
+    display:block;
+}
+
+h1{
+    position:absolute;
+    top:20px;
+    color:white;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Mon Portfolio</h1>
+
+<div class="card">
+    <img src="https://picsum.photos/600/400" alt="Projet">
+</div>
+
+<script>
+const card = document.querySelector(".card");
+
+card.addEventListener("mousemove", (e) => {
+    const rect = card.getBoundingClientRect();
+
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const rotateY = (x / rect.width - 0.5) * 20;
+    const rotateX = -(y / rect.height - 0.5) * 20;
+
+    card.style.transform =
+        `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+});
+
+card.addEventListener("mouseleave", () => {
+    card.style.transform =
+        "perspective(1000px) rotateX(0deg) rotateY(0deg)";
+});
+</script>
+
+</body>
+</html>
