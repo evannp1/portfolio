@@ -11,16 +11,39 @@
 </head>
 <body>
 
-<!-- ---------- ECRAN DE BOOT / LOGIN SYSTEME ---------- -->
+<!-- ---------- ECRAN DE BOOT / LOGIN SYSTEME (style ctOS) ---------- -->
 <div id="bootScreen" aria-hidden="true">
   <div class="boot-scan"></div>
   <div class="boot-grid"></div>
+  <div class="boot-vignette"></div>
+
+  <div class="boot-corner boot-corner-tl"></div>
+  <div class="boot-corner boot-corner-tr"></div>
+  <div class="boot-corner boot-corner-bl"></div>
+  <div class="boot-corner boot-corner-br"></div>
+
   <div class="boot-content">
     <div class="boot-logo">
       <span class="boot-logo-icon">◈</span>
       <span class="boot-logo-text">SISR<span class="boot-logo-dim">_OS</span></span>
+      <span class="boot-logo-ver">v2.4.1</span>
     </div>
+
+    <div class="boot-meta">
+      <span id="bootIp">10.4.20.1</span>
+      <span class="boot-sep">·</span>
+      <span id="bootTime">00:00:00</span>
+      <span class="boot-sep">·</span>
+      <span id="bootHash">0x00000000</span>
+    </div>
+
     <div class="boot-log" id="bootLog"></div>
+
+    <div class="boot-typing-row">
+      <span class="boot-prompt">root@sisr:~#</span>
+      <span class="boot-typing" id="bootTyping"></span><span class="boot-cursor">▌</span>
+    </div>
+
     <div class="boot-progress-wrap">
       <div class="boot-progress-label">
         <span id="bootStatus">INITIALISATION</span>
@@ -28,14 +51,10 @@
       </div>
       <div class="boot-progress-bar"><div class="boot-progress-fill" id="bootFill"></div></div>
     </div>
-    <div class="boot-footer">
-      <span id="bootIp">IP 10.4.20.1</span>
-      <span class="boot-footer-sep">//</span>
-      <span>ACCÈS AUTORISÉ</span>
-      <span class="boot-cursor">_</span>
-    </div>
   </div>
+
   <div class="boot-flicker"></div>
+</div>
 </div>
 
 <canvas id="netCanvas"></canvas>
