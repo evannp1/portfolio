@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Evann Pietot — Étudiant BTS SIO SISR</title>
+<title>Lucas Bertrand — Étudiant BTS SIO SISR</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -11,14 +11,41 @@
 </head>
 <body>
 
+<!-- ---------- ECRAN DE BOOT / LOGIN SYSTEME ---------- -->
+<div id="bootScreen" aria-hidden="true">
+  <div class="boot-scan"></div>
+  <div class="boot-grid"></div>
+  <div class="boot-content">
+    <div class="boot-logo">
+      <span class="boot-logo-icon">◈</span>
+      <span class="boot-logo-text">SISR<span class="boot-logo-dim">_OS</span></span>
+    </div>
+    <div class="boot-log" id="bootLog"></div>
+    <div class="boot-progress-wrap">
+      <div class="boot-progress-label">
+        <span id="bootStatus">INITIALISATION</span>
+        <span id="bootPercent">0%</span>
+      </div>
+      <div class="boot-progress-bar"><div class="boot-progress-fill" id="bootFill"></div></div>
+    </div>
+    <div class="boot-footer">
+      <span id="bootIp">IP 10.4.20.1</span>
+      <span class="boot-footer-sep">//</span>
+      <span>ACCÈS AUTORISÉ</span>
+      <span class="boot-cursor">_</span>
+    </div>
+  </div>
+  <div class="boot-flicker"></div>
+</div>
+
 <canvas id="netCanvas"></canvas>
 <div class="grain"></div>
 <div class="scrim-top"></div>
 
-<div class="wrap">
+<div class="wrap" id="siteWrap">
 
   <header class="nav">
-    <div class="id">evann@sisr:~$</div>
+    <div class="id">lucas@sisr:~$</div>
     <nav class="links">
       <a href="#about">À propos</a>
       <a href="#skills">Compétences</a>
@@ -30,8 +57,8 @@
 
   <section class="hero" id="top">
     <div class="eyebrow"><span class="rule"></span>BTS SIO — Option SISR · Promotion 2025–2027</div>
-    <h1>Evann Pietot,<br>je conçois et sécurise des <span class="accent">infrastructures réseau</span>.</h1>
-    <p class="lede">Étudiant en 1ᵉ année BTS Services Informatiques aux Organisations, spécialité Solutions d'Infrastructure, Systèmes et Réseaux. Architecture LAN/WAN, virtualisation, sécurité périmétrique — du schéma de topologie à la mise en production.</p>
+    <h1>Lucas Bertrand,<br>je conçois et sécurise des <span class="accent">infrastructures réseau</span>.</h1>
+    <p class="lede">Étudiant en 2ᵉ année BTS Services Informatiques aux Organisations, spécialité Solutions d'Infrastructure, Systèmes et Réseaux. Architecture LAN/WAN, virtualisation, sécurité périmétrique — du schéma de topologie à la mise en production.</p>
     <div class="ctas">
       <a class="btn btn-primary" href="#projects">Voir mes projets →</a>
       <a class="btn btn-ghost" href="#contact">Me contacter</a>
@@ -47,13 +74,16 @@
     </div>
     <div class="about-grid">
       <div>
-        <p>Je suis actuellement en BTS SIO, spécialisé dans l'<strong>administration de systèmes et réseaux</strong>. J'interviens sur le maintien en condition opérationnelle d'infrastructures hétérogènes : serveurs Windows/Linux, équipements actifs Cisco, virtualisation et supervision.</p>
+        <p>Je termine actuellement mon BTS SIO en alternance, spécialisé dans l'<strong>administration de systèmes et réseaux</strong>. J'interviens sur le maintien en condition opérationnelle d'infrastructures hétérogènes : serveurs Windows/Linux, équipements actifs Cisco, virtualisation et supervision.</p>
         <p>Ce qui m'attire dans le réseau, c'est la lecture d'un système comme un graphe vivant : chaque nœud a un rôle, chaque liaison une contrainte de débit, de latence ou de sécurité. C'est cette logique de topologie qui structure d'ailleurs ce site — le fond que tu vois bouger réagit à ta souris comme le ferait un graphe de supervision en temps réel.</p>
         <p>Je vise une poursuite d'études en licence Réseaux & Télécoms ou une entrée directe en alternance comme technicien systèmes et réseaux.</p>
       </div>
       <div class="spec-table">
         <div class="spec-row"><span class="k">Formation</span><span class="v">BTS SIO — SISR</span></div>
-        <div class="spec-row"><span class="k">Établissement</span><span class="v">Lycée Francois Rabelais, Saint-Brieuc</span></div>
+        <div class="spec-row"><span class="k">Établissement</span><span class="v">Lycée Gustave Eiffel, Reims</span></div>
+        <div class="spec-row"><span class="k">Alternance</span><span class="v">Cabinet d'expertise IT, Reims</span></div>
+        <div class="spec-row"><span class="k">Certifications visées</span><span class="v">CCNA, PIX</span></div>
+        <div class="spec-row"><span class="k">Statut</span><span class="v ok">● disponible — sept. 2027</span></div>
         <div class="spec-row"><span class="k">Permis</span><span class="v">B — véhiculé</span></div>
       </div>
     </div>
@@ -198,17 +228,18 @@
       </div>
       <div class="term-body">
         <div><span class="p">$</span> <span class="cmd">whoami --contact</span></div>
-        <span class="out">Evann Pietot — Étudiant BTS SIO SISR</span>
-        <span class="out">Mail : <a href="mailto:lucas.bertrand.sio@example.com">non</a></span>
-        <span class="out">Téléphone : NON</span>
-        <span class="out">GitHub : <a href="#" target="_blank" rel="noopener">github.com/evannp1</a></span>
+        <span class="out">Lucas Bertrand — Étudiant BTS SIO SISR</span>
+        <span class="out">Mail : <a href="mailto:lucas.bertrand.sio@example.com">lucas.bertrand.sio@example.com</a></span>
+        <span class="out">Téléphone : 06 12 34 56 78</span>
+        <span class="out">LinkedIn : <a href="#" target="_blank" rel="noopener">linkedin.com/in/lucas-bertrand-sisr</a></span>
+        <span class="out">GitHub : <a href="#" target="_blank" rel="noopener">github.com/lbertrand-sisr</a></span>
         <div style="margin-top:14px;"><span class="p">$</span> <span class="cursor-blink"></span></div>
       </div>
     </div>
   </section>
 
   <footer>
-    Portfolio Réalisé à titre professionnel — BTS SIO option SISR · © 2026 Evann Pietot
+    Portfolio fictif réalisé à titre d'exemple — BTS SIO option SISR · © 2026 Lucas Bertrand
   </footer>
 
 </div>
@@ -217,4 +248,3 @@
 
 </body>
 </html>
-
