@@ -1,5 +1,5 @@
 /* =====================================================================
-   BOOT SCREEN — séquence de démarrage façon terminal ctOS
+   BOOT SCREEN — séquence de démarrage façon terminal ctOS (Watch Dogs)
 ===================================================================== */
 (function(){
   const bootScreen = document.getElementById('bootScreen');
@@ -8,6 +8,9 @@
   const bootPercent = document.getElementById('bootPercent');
   const bootStatus = document.getElementById('bootStatus');
   const bootIp = document.getElementById('bootIp');
+  const bootTime = document.getElementById('bootTime');
+  const bootHash = document.getElementById('bootHash');
+  const bootTyping = document.getElementById('bootTyping');
   const siteWrap = document.getElementById('siteWrap');
 
   if(!bootScreen){ return; }
@@ -16,30 +19,36 @@
 
   const LOG_LINES = [
     { t: 'init kernel module net_topo.sys', ok:true },
-    { t: 'mounting /dev/sisr0 ... interface réseau détectée', ok:true },
-    { t: 'scan plage IP 10.4.20.0/24', ok:true },
+    { t: 'mounting /dev/sisr0', ok:true },
+    { t: 'interface réseau détectée : eth0', ok:true },
+    { t: 'scan plage 10.4.20.0/24', ok:true },
     { t: 'handshake passerelle 10.4.20.1', ok:true },
     { t: 'résolution DNS sisr.local', ok:true },
     { t: 'vérification certificat TLS', ok:true },
-    { t: 'chargement table de routage OSPF', ok:true },
-    { t: 'synchronisation VLAN 10 / 20 / 99', ok:true },
-    { t: 'analyse topologie : 64 nœuds détectés', ok:true },
-    { t: 'pare-feu pfSense — règles actives', ok:true },
-    { t: 'latence moyenne : 4ms', ok:true },
-    { t: 'tentative intrusion bloquée — port 22', warn:true },
-    { t: 'chiffrement canal établi (AES-256)', ok:true },
-    { t: 'chargement profil utilisateur lucas@sisr', ok:true },
-    { t: 'compilation interface graphique', ok:true },
+    { t: 'table de routage OSPF chargée', ok:true },
+    { t: 'sync VLAN 10 / 20 / 99', ok:true },
+    { t: 'topologie : 64 nœuds détectés', ok:true },
+    { t: 'pare-feu pfSense actif', ok:true },
+    { t: 'latence moyenne 4ms', ok:true },
+    { t: 'intrusion bloquée — port 22', warn:true },
+    { t: 'canal chiffré AES-256', ok:true },
+    { t: 'profil lucas@sisr chargé', ok:true },
+    { t: 'compilation interface', ok:true },
     { t: 'accès accordé', ok:true },
   ];
 
+  function randomHex(len){
+    let s = '0x';
+    for(let i=0;i<len;i++){ s += Math.floor(Math.random()*16).toString(16); }
+    return s;
+  }
   function randomIp(){
-    return `IP ${10+Math.floor(Math.random()*180)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;
+    return `${10+Math.floor(Math.random()*180)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;
   }
 
   let lineIndex = 0;
   let progress = 0;
-  const totalDuration = 2600; // ms approx
+  const totalDuration = 2900;
   const stepDelay = totalDuration / LOG_LINES.length;
 
   function appendLine(){
@@ -47,14 +56,22 @@
     const item = LOG_LINES[lineIndex];
     const div = document.createElement('div');
     div.className = 'ln' + (item.ok ? ' ok' : '') + (item.warn ? ' warn' : '');
-    div.textContent = `> ${item.t}`;
+    const addr = randomHex(6);
+    div.innerHTML = `<span class="addr">[${addr}]</span> ${item.t}`;
     bootLog.appendChild(div);
-    // garde seulement les dernières lignes visibles
     while(bootLog.children.length > 7){ bootLog.removeChild(bootLog.firstChild); }
     lineIndex++;
   }
 
-  const ipInterval = setInterval(()=>{ if(bootIp) bootIp.textContent = randomIp(); }, 180);
+  // horloge + IP + hash qui défilent en continu (effet "scan" réaliste)
+  const metaInterval = setInterval(()=>{
+    if(bootIp) bootIp.textContent = randomIp();
+    if(bootHash) bootHash.textContent = randomHex(8);
+    if(bootTime){
+      const now = new Date();
+      bootTime.textContent = now.toTimeString().slice(0,8);
+    }
+  }, 160);
 
   const statusLabels = ['INITIALISATION','CONNEXION RÉSEAU','AUTHENTIFICATION','CHARGEMENT INTERFACE'];
 
@@ -69,25 +86,39 @@
     }
     if(lineIndex >= LOG_LINES.length){
       clearInterval(logTimer);
-      clearInterval(ipInterval);
-      setTimeout(finishBoot, 380);
+      startTypingLine();
     }
   }, stepDelay);
+
+  // effet machine à écrire sur la ligne de commande finale
+  function startTypingLine(){
+    const fullText = 'access_granted --user=lucas.bertrand --session=sisr';
+    let i = 0;
+    const typeTimer = setInterval(()=>{
+      if(bootTyping) bootTyping.textContent = fullText.slice(0, i);
+      i++;
+      if(i > fullText.length){
+        clearInterval(typeTimer);
+        clearInterval(metaInterval);
+        setTimeout(finishBoot, 450);
+      }
+    }, 28);
+  }
 
   function finishBoot(){
     bootScreen.classList.add('boot-done');
     document.body.classList.remove('is-booting');
     if(siteWrap) siteWrap.classList.add('wrap-visible');
-    setTimeout(()=>{ if(bootScreen.parentNode){ bootScreen.style.display = 'none'; } }, 700);
+    setTimeout(()=>{ if(bootScreen.parentNode){ bootScreen.style.display = 'none'; } }, 600);
   }
 
-  // sécurité : si quelque chose bloque, on force la fin après 6s max
+  // sécurité : si quelque chose bloque, on force la fin après 7s max
   setTimeout(()=>{
     if(!bootScreen.classList.contains('boot-done')){
-      clearInterval(logTimer); clearInterval(ipInterval);
+      clearInterval(logTimer); clearInterval(metaInterval);
       finishBoot();
     }
-  }, 6000);
+  }, 7000);
 })();
 
 
