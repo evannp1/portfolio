@@ -1,326 +1,216 @@
-:root{
-    --bg-deep:#050b18;
-    --bg-panel:#0a1730;
-    --bg-panel-2:#0d1f3d;
-    --cyan:#00d4ff;
-    --teal:#1de9b6;
-    --text-main:#e8f4ff;
-    --text-dim:#7a93b8;
-    --line:rgba(122,147,184,0.16);
-    --mono: 'IBM Plex Mono', monospace;
-    --display: 'Space Grotesk', sans-serif;
-    --body: 'Inter', sans-serif;
-  }
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evann Pietot — Étudiant BTS SIO SISR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-  *{margin:0;padding:0;box-sizing:border-box;}
+<canvas id="netCanvas"></canvas>
+<div class="grain"></div>
+<div class="scrim-top"></div>
 
-  html{scroll-behavior:smooth;}
+<div class="wrap" id="siteWrap">
 
-  body{
-    background:var(--bg-deep);
-    color:var(--text-main);
-    font-family:var(--body);
-    overflow-x:hidden;
-    position:relative;
-  }
+  <header class="nav">
+    <div class="id">evann@sisr:~$</div>
+    <nav class="links">
+      <a href="#about">À propos</a>
+      <a href="#skills">Compétences</a>
+      <a href="#projects">Projets</a>
+      <a href="#veille">Veille</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
 
-  /* ---------- CANVAS RESEAU ---------- */
-  #netCanvas{
-    position:fixed;
-    top:0;left:0;
-    width:100%;height:100%;
-    z-index:0;
-    background:
-      radial-gradient(ellipse 120% 80% at 15% 20%, rgba(0,90,180,0.35), transparent 60%),
-      radial-gradient(ellipse 100% 90% at 95% 75%, rgba(29,233,182,0.18), transparent 55%),
-      var(--bg-deep);
-  }
+  <section class="hero" id="top">
+    <div class="eyebrow"><span class="rule"></span>BTS SIO — Option SISR · 2025–2027</div>
+    <h1>Evann Pietot<br>je conçois et sécurise des <span class="accent">infrastructures réseau</span>.</h1>
+    <p class="lede">Étudiant en 2ᵉ année BTS Services Informatiques aux Organisations, spécialité Solutions d'Infrastructure, Systèmes et Réseaux.</p>
+    <div class="ctas">
+      <a class="btn btn-primary" href="#projects">Voir mes projets →</a>
+      <a class="btn btn-ghost" href="#contact">Me contacter</a>
+    </div>
+    <div class="scroll-cue"><div class="line"></div>défiler</div>
+  </section>
 
-  .grain{
-    position:fixed; inset:0; z-index:1; pointer-events:none;
-    background-image:
-      repeating-linear-gradient(90deg, rgba(255,255,255,0.015) 0px, transparent 1px, transparent 3px);
-    opacity:0.5;
-  }
+  <section id="about">
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2>Profil</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="about-grid">
+      <div>
+        <p>Je suis actuellement en BTS SIO , spécialisé dans l'<strong>administration de systèmes et réseaux</strong>.</p>
+        <p>Ce qui m'attire dans le réseau, c'est la lecture d'un système comme un graphe vivant : chaque nœud a un rôle, chaque liaison une contrainte de débit, de latence ou de sécurité. C'est cette logique de topologie qui structure d'ailleurs ce site </p>
+        <p>Je vise une poursuite d'études en licence ? ou une entrée directe en alternance comme technicien systèmes et réseaux.</p>
+      </div>
+      <div class="spec-table">
+        <div class="spec-row"><span class="k">Formation</span><span class="v">BTS SIO — SISR</span></div>
+        <div class="spec-row"><span class="k">Établissement</span><span class="v">Lycée Francois Rabelais, Saint-Brieuc</span></div>
+        <div class="spec-row"><span class="k">Statut</span><span class="v ok">● disponible — sept. 2027</span></div>
+        <div class="spec-row"><span class="k">Permis</span><span class="v">B — véhiculé</span></div>
+      </div>
+    </div>
+  </section>
 
-  .scrim-top{
-    position:fixed; top:0; left:0; right:0; height:140px; z-index:1; pointer-events:none;
-    background:linear-gradient(to bottom, rgba(5,11,24,0.7), transparent);
-  }
+  <section id="skills">
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2>Compétences techniques</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <span class="tag">Réseau</span>
+        <h3>Architecture & routage</h3>
+        <ul>
+          <li>Adressage IPv4/IPv6, sous-réseaux</li>
+          <li>Routage statique & dynamique</li>
+          <li>VLAN, trunking, agrégation de liens</li>
+          <li>Configuration switchs/routeurs Cisco (IOS)</li>
+        </ul>
+      </div>
+      <div class="skill-card">
+        <span class="tag">Sécurité</span>
+        <h3>Sécurisation des accès</h3>
+        <ul>
+          <li>Pare-feu , règles de filtrage NAT/ACL</li>
+          <li>VPN et accès distant</li>
+          <li>Supervision et détection d'incidents </li>
+        </ul>
+      </div>
+      <div class="skill-card">
+        <span class="tag">Systèmes</span>
+        <h3>Administration serveurs</h3>
+        <ul>
+          <li>Windows Server : AD DS, GPO, DNS, DHCP</li>
+          <li>Linux (Debian/Ubuntu) : services, scripting Bash</li>
+          <li>Virtualisation : VMware ESXi, Hyper-V</li>
+          <li>Sauvegarde & plan de reprise d'activité</li>
+        </ul>
+      </div>
+      <div class="skill-card">
+        <span class="tag">Outils & méthode</span>
+        <h3>Exploitation & support</h3>
+        <ul>
+        </ul>
+      </div>
+    </div>
+  </section>
 
-  /* ---------- LAYOUT ---------- */
-  .wrap{position:relative; z-index:2;}
+  <section id="projects">
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2>Projets & réalisations</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="projects">
 
-  header.nav{
-    position:fixed; top:0; left:0; right:0; z-index:50;
-    display:flex; align-items:center; justify-content:space-between;
-    padding:22px 6vw;
-    backdrop-filter:blur(10px);
-    background:rgba(5,11,24,0.35);
-    border-bottom:1px solid var(--line);
-  }
-  .nav .id{
-    font-family:var(--mono); font-size:13px; letter-spacing:0.04em;
-    color:var(--cyan);
-    display:flex; align-items:center; gap:8px;
-  }
-  .nav .id::before{
-    content:'';
-    width:8px;height:8px;border-radius:50%;
-    background:var(--teal);
-    box-shadow:0 0 8px var(--teal);
-    animation:pulse 2.2s infinite;
-  }
-  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.35;}}
+      <div class="project">
+        <div class="pid">P.01</div>
+        <div class="pbody">
+          <h3>Déploiement automatisé de postes via FOG + Active Directory <span class="status deploye">tester</span></h3>
+          <p>Mise en place d'une chaîne d'imagerie réseau sur Hyper-V : serveur FOG (Debian) couplé à un contrôleur de domaine AD. Capture d'un poste master (Sysprep + unattend.xml) et déploiement automatisé avec jonction au domaine via FOG Client.</p>
+          <div class="stack"><span>FOG Project</span><span>Hyper-V</span><span>Active Directory</span></div>
+        </div>
+        <div class="pmeta">Projet de stage — labo virtualisé<br>1ᵉ année</div>
+      </div>
 
-  nav.links{display:flex; gap:36px; font-family:var(--mono); font-size:13px;}
-  nav.links a{
-    color:var(--text-dim); text-decoration:none; letter-spacing:0.03em;
-    position:relative; transition:color 0.25s;
-  }
-  nav.links a:hover, nav.links a:focus-visible{color:var(--text-main);}
-  nav.links a::after{
-    content:''; position:absolute; left:0; bottom:-6px; height:1px; width:0%;
-    background:var(--cyan); transition:width 0.25s;
-  }
-  nav.links a:hover::after{width:100%;}
+      <div class="project">
+        <div class="pid">P.02</div>
+        <div class="pbody">
+          <h3>Messagerie collaborative auto-hébergée — Rocket.Chat <span class="status deploye">tester</span></h3>
+          <p>Déploiement d'une solution de messagerie d'équipe en local via Docker Compose (Rocket.Chat + MongoDB). Configuration des canaux, des rôles utilisateurs .</p>
+          <div class="stack"><span>Rocket.Chat</span><span>MongoDB</span><span>Docker</span></div>
+        </div>
+        <div class="pmeta">Projet de stage — labo virtualisé 1ᵉ année</div>
+      </div>
 
-  section{
-    position:relative;
-    padding:140px 6vw 110px;
-    max-width:1280px;
-    margin:0 auto;
-  }
+      <div class="project">
+        <div class="pid">P.03</div>
+        <div class="pbody">
+          <h3>Supervision d'infrastructure en alternance <span class="status cours">En cours</span></h3>
+          <p>Mise en place d'une supervision centralisée (Centreon) sur le parc client : serveurs, switchs, liens WAN. Configuration d'alertes par seuil et tableau de bord pour l'équipe support.</p>
+          <div class="stack"><span>Centreon</span><span>SNMP</span><span>Grafana</span></div>
+        </div>
+        <div class="pmeta">Mission alternance<br>2025–2026</div>
+      </div>
 
-  /* ---------- HERO ---------- */
-  .hero{
-    min-height:100vh;
-    display:flex; flex-direction:column; justify-content:center;
-    padding-top:90px;
-  }
-  .eyebrow{
-    font-family:var(--mono); font-size:13px; color:var(--teal);
-    letter-spacing:0.12em; text-transform:uppercase;
-    margin-bottom:22px;
-    display:flex; align-items:center; gap:12px;
-  }
-  .eyebrow .rule{width:40px;height:1px;background:var(--teal);opacity:0.6;}
+      <div class="project">
+        <div class="pid">P.04</div>
+        <div class="pbody">
+          <h3>VPN site-à-site multi-agences <span class="status deploye">Déployé</span></h3>
+          <p>Interconnexion sécurisée de deux sites distants via tunnel IPsec sur pare-feu pfSense, avec bascule automatique sur lien de secours 4G en cas de coupure de la ligne principale.</p>
+          <div class="stack"><span>pfSense</span><span>IPsec</span><span>Failover WAN</span></div>
+        </div>
+        <div class="pmeta">Projet de classe<br>1ʳᵉ année</div>
+      </div>
 
-  .hero h1{
-    font-family:var(--display);
-    font-weight:700;
-    font-size:clamp(42px, 7.2vw, 84px);
-    line-height:1.04;
-    letter-spacing:-0.01em;
-    max-width:920px;
-  }
-  .hero h1 .accent{
-    color:var(--cyan);
-    background:linear-gradient(90deg, var(--cyan), var(--teal));
-    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
-  }
+    </div>
+  </section>
 
-  .hero p.lede{
-    margin-top:28px;
-    max-width:560px;
-    font-size:18px;
-    line-height:1.65;
-    color:var(--text-dim);
-  }
+  <section id="veille">
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <h2>Veille technologique</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="timeline">
+      <div class="tl-item">
+        <span class="date">Mai 2026</span>
+        <h4>Migration progressive vers IPv6 en environnement d'entreprise</h4>
+        <p>Synthèse des freins constatés en alternance lors du passage d'un parc en double pile IPv4/IPv6, et des bonnes pratiques de transition.</p>
+      </div>
+      <div class="tl-item">
+        <span class="date">Février 2026</span>
+        <h4>Zero Trust Network Access : au-delà du VPN classique</h4>
+        <p>Étude comparative entre VPN traditionnel et architecture ZTNA pour le travail hybride, appliquée à un cas d'usage PME.</p>
+      </div>
+      <div class="tl-item">
+        <span class="date">Novembre 2025</span>
+        <h4>Durcissement des équipements actifs face aux attaques par déni de service</h4>
+        <p>Veille sur les techniques de mitigation DDoS au niveau switch/routeur et mise en pratique sur maquette Packet Tracer.</p>
+      </div>
+    </div>
+  </section>
 
-  .hero .ctas{
-    margin-top:44px;
-    display:flex; gap:18px; flex-wrap:wrap;
-  }
-  .btn{
-    font-family:var(--mono); font-size:13px; letter-spacing:0.03em;
-    padding:14px 26px;
-    border-radius:2px;
-    text-decoration:none;
-    transition:transform 0.2s, box-shadow 0.2s, background 0.2s;
-    display:inline-flex; align-items:center; gap:10px;
-  }
-  .btn-primary{
-    background:var(--cyan); color:#04101f; font-weight:600;
-  }
-  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 8px 28px rgba(0,212,255,0.35);}
-  .btn-ghost{
-    border:1px solid var(--line); color:var(--text-main);
-  }
-  .btn-ghost:hover{border-color:var(--cyan); color:var(--cyan); transform:translateY(-2px);}
+  <section id="contact">
+    <div class="sec-head">
+      <span class="sec-num">05</span>
+      <h2>Contact</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="contact-term">
+      <div class="term-bar">
+        <span class="l1"></span><span class="l2"></span><span class="l3"></span>
+        <span class="ttl">evann@sisr —bash</span>
+      </div>
+      <div class="term-body">
+        <div><span class="p">$</span> <span class="cmd">whoami --contact</span></div>
+        <span class="out">Evann Pietot — Étudiant BTS SIO SISR</span>
+        <span class="out">Mail : <a href="mailto:?">?</a></span>
+        <span class="out">Téléphone : ?</span>
+        <span class="out">LinkedIn : <a href="#" target="_blank" rel="noopener">linkedin.com</a></span>
+        <span class="out">GitHub : <a href="#" target="_blank" rel="noopener">github.com/evannp1</a></span>
+        <div style="margin-top:14px;"><span class="p">$</span> <span class="cursor-blink"></span></div>
+      </div>
+    </div>
+  </section>
 
-  .scroll-cue{
-    position:absolute; bottom:36px; left:6vw;
-    font-family:var(--mono); font-size:11px; color:var(--text-dim);
-    letter-spacing:0.1em;
-    display:flex; align-items:center; gap:10px;
-  }
-  .scroll-cue .line{width:1px;height:36px;background:linear-gradient(to bottom, var(--text-dim), transparent);}
+  <footer>
+    Portfolio réalisé à titre professionnel — BTS SIO option SISR · © 2026 Evann Pietot
+  </footer>
 
-  /* ---------- SECTION HEADERS ---------- */
-  .sec-head{
-    display:flex; align-items:baseline; gap:18px;
-    margin-bottom:56px;
-    flex-wrap:wrap;
-  }
-  .sec-num{
-    font-family:var(--mono); font-size:13px; color:var(--teal);
-  }
-  .sec-head h2{
-    font-family:var(--display); font-weight:600;
-    font-size:clamp(28px,3.4vw,40px);
-  }
-  .sec-head .sec-rule{flex:1; height:1px; background:var(--line); min-width:60px;}
+</div>
 
-  /* ---------- A PROPOS ---------- */
-  .about-grid{
-    display:grid; grid-template-columns:1.1fr 0.9fr; gap:70px;
-    align-items:start;
-  }
-  .about-grid p{color:var(--text-dim); font-size:16px; line-height:1.8; margin-bottom:18px;}
-  .about-grid p strong{color:var(--text-main); font-weight:600;}
+<script src="script.js"></script>
 
-  .spec-table{
-    font-family:var(--mono); font-size:13.5px;
-    border:1px solid var(--line);
-    background:rgba(255,255,255,0.015);
-  }
-  .spec-row{
-    display:flex; justify-content:space-between;
-    padding:14px 18px;
-    border-bottom:1px solid var(--line);
-    gap:20px;
-  }
-  .spec-row:last-child{border-bottom:none;}
-  .spec-row .k{color:var(--text-dim);}
-  .spec-row .v{color:var(--text-main); text-align:right;}
-  .spec-row .v.ok{color:var(--teal);}
-
-  /* ---------- COMPETENCES ---------- */
-  .skills-grid{
-    display:grid; grid-template-columns:repeat(2, 1fr); gap:1px;
-    border:1px solid var(--line);
-    background:var(--line);
-  }
-  .skill-card{
-    background:var(--bg-panel);
-    padding:30px 32px;
-    transition:background 0.3s;
-  }
-  .skill-card:hover{background:var(--bg-panel-2);}
-  .skill-card .tag{
-    font-family:var(--mono); font-size:11px; color:var(--teal);
-    letter-spacing:0.08em; text-transform:uppercase;
-  }
-  .skill-card h3{
-    font-family:var(--display); font-size:21px; font-weight:600;
-    margin:10px 0 14px;
-  }
-  .skill-card ul{list-style:none;}
-  .skill-card li{
-    font-size:14px; color:var(--text-dim);
-    padding:6px 0 6px 20px;
-    position:relative;
-    border-top:1px solid rgba(255,255,255,0.04);
-  }
-  .skill-card li:first-child{border-top:none;}
-  .skill-card li::before{
-    content:'›'; position:absolute; left:0; color:var(--cyan);
-  }
-
-  /* ---------- PROJETS ---------- */
-  .projects{display:flex; flex-direction:column; gap:1px; border:1px solid var(--line);}
-  .project{
-    background:var(--bg-panel);
-    display:grid; grid-template-columns:90px 1fr auto;
-    gap:28px;
-    padding:32px 32px;
-    align-items:start;
-    border-bottom:1px solid var(--line);
-    transition:background 0.3s;
-    position:relative;
-  }
-  .project:last-child{border-bottom:none;}
-  .project:hover{background:var(--bg-panel-2);}
-  .project .pid{
-    font-family:var(--mono); font-size:13px; color:var(--text-dim); padding-top:4px;
-  }
-  .project .pbody h3{
-    font-family:var(--display); font-size:22px; font-weight:600; margin-bottom:10px;
-    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
-  }
-  .status{
-    font-family:var(--mono); font-size:10.5px; padding:3px 9px; border-radius:20px;
-    letter-spacing:0.05em; text-transform:uppercase; font-weight:600;
-  }
-  .status.deploye{background:rgba(29,233,182,0.12); color:var(--teal); border:1px solid rgba(29,233,182,0.3);}
-  .status.cours{background:rgba(0,212,255,0.1); color:var(--cyan); border:1px solid rgba(0,212,255,0.3);}
-  .project p{color:var(--text-dim); font-size:14.5px; line-height:1.7; max-width:580px;}
-  .stack{
-    display:flex; gap:8px; flex-wrap:wrap; margin-top:16px;
-  }
-  .stack span{
-    font-family:var(--mono); font-size:11px; color:var(--text-dim);
-    border:1px solid var(--line); padding:4px 10px; border-radius:2px;
-  }
-  .project .pmeta{
-    font-family:var(--mono); font-size:12px; color:var(--text-dim); text-align:right; padding-top:4px;
-    white-space:nowrap;
-  }
-
-  /* ---------- VEILLE / TIMELINE ---------- */
-  .timeline{position:relative; padding-left:28px; border-left:1px solid var(--line);}
-  .tl-item{position:relative; padding-bottom:38px;}
-  .tl-item:last-child{padding-bottom:0;}
-  .tl-item::before{
-    content:''; position:absolute; left:-33px; top:4px;
-    width:9px;height:9px;border-radius:50%;
-    background:var(--bg-deep); border:2px solid var(--cyan);
-  }
-  .tl-item h4{font-family:var(--display); font-size:17px; margin-bottom:6px;}
-  .tl-item .date{font-family:var(--mono); font-size:11.5px; color:var(--teal); margin-bottom:8px; display:block;}
-  .tl-item p{color:var(--text-dim); font-size:14.5px; max-width:600px; line-height:1.7;}
-
-  /* ---------- CONTACT ---------- */
-  .contact-term{
-    border:1px solid var(--line);
-    background:rgba(0,0,0,0.25);
-    font-family:var(--mono);
-    max-width:680px;
-  }
-  .term-bar{
-    display:flex; align-items:center; gap:8px;
-    padding:12px 16px;
-    border-bottom:1px solid var(--line);
-  }
-  .term-bar span{width:10px;height:10px;border-radius:50%;background:#445;}
-  .term-bar .l1{background:#ff5f56;} .term-bar .l2{background:#ffbd2e;} .term-bar .l3{background:#27c93f;}
-  .term-bar .ttl{margin-left:10px; font-size:12px; color:var(--text-dim);}
-  .term-body{padding:26px 24px; font-size:14px; line-height:2;}
-  .term-body .p{color:var(--teal);}
-  .term-body .cmd{color:var(--text-main);}
-  .term-body .out{color:var(--text-dim); display:block; padding-left:18px;}
-  .term-body a{color:var(--cyan); text-decoration:none; border-bottom:1px dashed rgba(0,212,255,0.4);}
-  .term-body a:hover{color:var(--teal); border-color:var(--teal);}
-  .cursor-blink{display:inline-block; width:7px; height:14px; background:var(--cyan); animation:pulse 1s infinite; vertical-align:middle;}
-
-  footer{
-    text-align:center; padding:50px 6vw 60px;
-    font-family:var(--mono); font-size:12px; color:var(--text-dim);
-    position:relative; z-index:2;
-  }
-
-  @media (max-width: 860px){
-    nav.links{display:none;}
-    .about-grid{grid-template-columns:1fr; gap:40px;}
-    .skills-grid{grid-template-columns:1fr;}
-    .project{grid-template-columns:1fr; gap:10px;}
-    .project .pmeta{text-align:left;}
-    section{padding:100px 6vw 80px;}
-  }
-
-  :focus-visible{outline:2px solid var(--cyan); outline-offset:3px;}
-
-  @media (prefers-reduced-motion: reduce){
-    *{animation-duration:0.001s !important; transition-duration:0.001s !important;}
-  }
+</body>
+</html>
