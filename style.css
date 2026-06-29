@@ -95,9 +95,27 @@
   /* ---------- HERO ---------- */
   .hero{
     min-height:100vh;
-    display:flex; flex-direction:column; justify-content:center;
+    display:grid;
+    grid-template-columns:1.15fr 1fr;
+    align-items:center;
+    gap:20px;
     padding-top:90px;
   }
+  .hero-text{ position:relative; z-index:3; }
+
+  .hero-sphere{
+    position:relative;
+    width:100%;
+    height:min(560px, 62vw);
+    z-index:2;
+  }
+  .hero-sphere canvas{
+    width:100% !important; height:100% !important;
+    display:block;
+    cursor:grab;
+  }
+  .hero-sphere:active canvas{ cursor:grabbing; }
+
   .eyebrow{
     font-family:var(--mono); font-size:13px; color:var(--teal);
     letter-spacing:0.12em; text-transform:uppercase;
@@ -109,10 +127,9 @@
   .hero h1{
     font-family:var(--display);
     font-weight:700;
-    font-size:clamp(42px, 7.2vw, 84px);
-    line-height:1.04;
+    font-size:clamp(38px, 5.6vw, 72px);
+    line-height:1.05;
     letter-spacing:-0.01em;
-    max-width:920px;
   }
   .hero h1 .accent{
     color:var(--cyan);
@@ -122,7 +139,7 @@
 
   .hero p.lede{
     margin-top:28px;
-    max-width:560px;
+    max-width:520px;
     font-size:18px;
     line-height:1.65;
     color:var(--text-dim);
@@ -277,7 +294,7 @@
     width:9px;height:9px;border-radius:50%;
     background:var(--bg-deep); border:2px solid var(--cyan);
   }
-  .tl-item h4{font-family:var(--display); font-size:17px; margin-bottom:6px;}
+  .tl-item h4{font-family:var(--display); font-size:17px; margin-bottom:6px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;}
   .tl-item .date{font-family:var(--mono); font-size:11.5px; color:var(--teal); margin-bottom:8px; display:block;}
   .tl-item p{color:var(--text-dim); font-size:14.5px; max-width:600px; line-height:1.7;}
 
@@ -312,6 +329,9 @@
 
   @media (max-width: 860px){
     nav.links{display:none;}
+    .hero{ grid-template-columns:1fr; gap:36px; padding-top:110px; text-align:left; }
+    .hero-sphere{ height:340px; order:2; }
+    .hero-text{ order:1; }
     .about-grid{grid-template-columns:1fr; gap:40px;}
     .skills-grid{grid-template-columns:1fr;}
     .project{grid-template-columns:1fr; gap:10px;}
