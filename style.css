@@ -26,159 +26,53 @@
 
   body.is-booting{overflow:hidden; height:100vh;}
 
-  /* ---------- BOOT SCREEN (style ctOS / Watch Dogs) ---------- */
+  /* ---------- BOOT SCREEN (style kernel log brut) ---------- */
   #bootScreen{
     position:fixed; inset:0; z-index:9999;
-    background:#020608;
-    font-family:var(--mono);
-    transition:opacity 0.5s ease, visibility 0.5s;
+    background:#000;
+    font-family:'Courier New', var(--mono), monospace;
+    transition:opacity 0.35s ease, visibility 0.35s;
     overflow:hidden;
+    padding:14px 0 0 14px;
   }
   #bootScreen.boot-done{
     opacity:0; visibility:hidden; pointer-events:none;
   }
 
-  .boot-grid{
-    position:absolute; inset:0;
-    background-image:
-      linear-gradient(rgba(0,212,255,0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,212,255,0.05) 1px, transparent 1px);
-    background-size:28px 28px;
-  }
-
-  .boot-vignette{
-    position:absolute; inset:0;
-    background:radial-gradient(ellipse 90% 90% at 8% 8%, rgba(0,212,255,0.07), transparent 55%),
-                radial-gradient(ellipse 70% 70% at 100% 100%, rgba(0,0,0,0.6), transparent 60%);
-  }
-
-  .boot-scan{
-    position:absolute; left:0; right:0; height:2px;
-    background:linear-gradient(90deg, transparent, rgba(0,212,255,0.85), transparent);
-    box-shadow:0 0 16px 2px rgba(0,212,255,0.55);
-    animation:bootScanMove 2.4s linear infinite;
-  }
-  @keyframes bootScanMove{
-    0%{top:0%;} 100%{top:100%;}
-  }
-
   .boot-flicker{
     position:absolute; inset:0; pointer-events:none;
-    background:rgba(0,212,255,0.02);
-    animation:bootFlicker 0.15s steps(2) infinite;
+    background:rgba(255,255,255,0.012);
+    animation:bootFlicker 0.12s steps(2) infinite;
   }
   @keyframes bootFlicker{
     0%,100%{opacity:0;} 50%{opacity:1;}
   }
 
-  /* coins de cadre façon viseur HUD */
-  .boot-corner{
-    position:absolute; width:26px; height:26px;
-    border:2px solid rgba(0,212,255,0.55);
-    opacity:0.8;
-  }
-  .boot-corner-tl{ top:22px; left:22px; border-right:none; border-bottom:none; }
-  .boot-corner-tr{ top:22px; right:22px; border-left:none; border-bottom:none; }
-  .boot-corner-bl{ bottom:22px; left:22px; border-right:none; border-top:none; }
-  .boot-corner-br{ bottom:22px; right:22px; border-left:none; border-top:none; }
-
-  .boot-content{
-    position:absolute;
-    top:40px; left:40px;
-    z-index:2;
-    width:min(480px, 78vw);
-    color:#bfeeff;
-  }
-
-  .boot-logo{
-    display:flex; align-items:baseline; gap:10px;
-    font-family:var(--display); font-size:20px; font-weight:700;
-    letter-spacing:0.04em;
-    margin-bottom:10px;
-    color:var(--cyan);
-    text-shadow:0 0 14px rgba(0,212,255,0.5);
-  }
-  .boot-logo-icon{
-    display:inline-block; animation:bootSpin 3.2s linear infinite;
-    color:var(--teal); font-size:16px;
-  }
-  @keyframes bootSpin{ to{ transform:rotate(360deg); } }
-  .boot-logo-dim{ color:var(--teal); opacity:0.75; font-weight:500; }
-  .boot-logo-ver{ font-family:var(--mono); font-size:10.5px; color:rgba(122,180,210,0.5); font-weight:400; letter-spacing:0.05em; }
-
-  .boot-meta{
-    font-size:10.5px; letter-spacing:0.04em;
-    color:rgba(122,190,220,0.55);
-    margin-bottom:18px;
-    display:flex; gap:8px; align-items:center;
-  }
-  .boot-sep{ opacity:0.4; }
-
   .boot-log{
-    height:148px;
-    overflow:hidden;
-    font-size:11.5px;
-    line-height:1.7;
-    color:rgba(170,225,245,0.7);
-    margin-bottom:14px;
-    padding-left:0;
+    margin:0;
+    font-family:'Courier New', var(--mono), monospace;
+    font-size:14px;
+    line-height:1.42;
+    color:#c4c9cc;
+    white-space:pre-wrap;
+    word-break:break-word;
   }
-  .boot-log .ln{
-    opacity:0;
-    animation:bootLineIn 0.2s forwards;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-  .boot-log .ln .addr{ color:rgba(100,160,190,0.55); }
-  .boot-log .ln.ok::after{content:' OK'; color:var(--teal); font-weight:600;}
-  .boot-log .ln.warn::after{content:' WARN'; color:#ffcf6b; font-weight:600;}
-  @keyframes bootLineIn{
-    from{opacity:0; transform:translateX(-4px);}
-    to{opacity:1; transform:translateX(0);}
-  }
+  .boot-log .ok{ color:#3ddc5a; font-weight:700; }
+  .boot-log .started{ color:#3ddc5a; font-weight:700; }
 
-  .boot-typing-row{
-    font-size:12.5px;
-    margin-bottom:18px;
-    color:var(--cyan);
-    display:flex; gap:8px;
-    min-height:18px;
+  .boot-login-row{
+    font-family:'Courier New', var(--mono), monospace;
+    font-size:14px;
+    color:#c4c9cc;
+    margin-top:2px;
   }
-  .boot-prompt{ color:var(--teal); white-space:nowrap; }
-  .boot-typing{ color:#dff6ff; white-space:nowrap; overflow:hidden; }
   .boot-cursor{
-    color:var(--cyan); animation:pulse 0.8s steps(2) infinite;
-  }
-
-  .boot-progress-wrap{ width:100%; }
-  .boot-progress-label{
-    display:flex; justify-content:space-between;
-    font-size:11px; letter-spacing:0.06em;
-    color:var(--cyan); margin-bottom:7px;
-  }
-  .boot-progress-bar{
-    height:5px; width:100%;
-    background:rgba(0,212,255,0.1);
-    border:1px solid rgba(0,212,255,0.3);
-    position:relative; overflow:hidden;
-  }
-  .boot-progress-fill{
-    height:100%; width:0%;
-    background:linear-gradient(90deg, var(--cyan), var(--teal));
-    box-shadow:0 0 10px rgba(0,212,255,0.7);
-    transition:width 0.18s linear;
+    color:#c4c9cc; animation:pulse 0.7s steps(2) infinite;
   }
 
   @media (max-width:560px){
-    .boot-content{ top:24px; left:20px; width:84vw; }
-    .boot-corner{ width:18px; height:18px; }
-    .boot-corner-tl,.boot-corner-tr{ top:12px; }
-    .boot-corner-bl,.boot-corner-br{ bottom:12px; }
-    .boot-corner-tl,.boot-corner-bl{ left:12px; }
-    .boot-corner-tr,.boot-corner-br{ right:12px; }
-    .boot-log{ height:128px; font-size:10.5px; }
-    .boot-logo{ font-size:17px; }
+    #bootScreen{ padding:10px 0 0 10px; }
+    .boot-log, .boot-login-row{ font-size:11px; line-height:1.4; }
   }
 
   /* ---------- CANVAS RESEAU ---------- */
