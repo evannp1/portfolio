@@ -24,57 +24,6 @@
     position:relative;
   }
 
-  body.is-booting{overflow:hidden; height:100vh;}
-
-  /* ---------- BOOT SCREEN (style kernel log brut) ---------- */
-  #bootScreen{
-    position:fixed; inset:0; z-index:9999;
-    background:#000;
-    font-family:'Courier New', var(--mono), monospace;
-    transition:opacity 0.35s ease, visibility 0.35s;
-    overflow:hidden;
-    padding:14px 0 0 14px;
-  }
-  #bootScreen.boot-done{
-    opacity:0; visibility:hidden; pointer-events:none;
-  }
-
-  .boot-flicker{
-    position:absolute; inset:0; pointer-events:none;
-    background:rgba(255,255,255,0.012);
-    animation:bootFlicker 0.12s steps(2) infinite;
-  }
-  @keyframes bootFlicker{
-    0%,100%{opacity:0;} 50%{opacity:1;}
-  }
-
-  .boot-log{
-    margin:0;
-    font-family:'Courier New', var(--mono), monospace;
-    font-size:14px;
-    line-height:1.42;
-    color:#c4c9cc;
-    white-space:pre-wrap;
-    word-break:break-word;
-  }
-  .boot-log .ok{ color:#3ddc5a; font-weight:700; }
-  .boot-log .started{ color:#3ddc5a; font-weight:700; }
-
-  .boot-login-row{
-    font-family:'Courier New', var(--mono), monospace;
-    font-size:14px;
-    color:#c4c9cc;
-    margin-top:2px;
-  }
-  .boot-cursor{
-    color:#c4c9cc; animation:pulse 0.7s steps(2) infinite;
-  }
-
-  @media (max-width:560px){
-    #bootScreen{ padding:10px 0 0 10px; }
-    .boot-log, .boot-login-row{ font-size:11px; line-height:1.4; }
-  }
-
   /* ---------- CANVAS RESEAU ---------- */
   #netCanvas{
     position:fixed;
@@ -100,8 +49,7 @@
   }
 
   /* ---------- LAYOUT ---------- */
-  .wrap{position:relative; z-index:2; opacity:0; transition:opacity 0.9s ease;}
-  .wrap.wrap-visible{opacity:1;}
+  .wrap{position:relative; z-index:2;}
 
   header.nav{
     position:fixed; top:0; left:0; right:0; z-index:50;
