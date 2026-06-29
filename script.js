@@ -1,4 +1,166 @@
 /* =====================================================================
+   SPHERE 3D INTERACTIVE — Hero, prolongement du fond réseau
+===================================================================== */
+(function(){
+  const container = document.getElementById('heroSphere');
+  if(!container || typeof THREE === 'undefined') return;
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let width = container.clientWidth, height = container.clientHeight;
+  if(width === 0 || height === 0) return;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 100);
+  camera.position.z = 9;
+
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setSize(width, height);
+  container.appendChild(renderer.domElement);
+
+  // ---- groupe principal (tout tourne ensemble) ----
+  const group = new THREE.Group();
+  scene.add(group);
+
+  // ---- génération des points sur une sphère (répartition Fibonacci) ----
+  const NODE_COUNT = 70;
+  const RADIUS = 3.4;
+  const points = [];
+  const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+
+  for(let i = 0; i < NODE_COUNT; i++){
+    const y = 1 - (i / (NODE_COUNT - 1)) * 2; // de 1 à -1
+    const radiusAtY = Math.sqrt(1 - y * y);
+    const theta = goldenAngle * i;
+    const x = Math.cos(theta) * radiusAtY;
+    const z = Math.sin(theta) * radiusAtY;
+    points.push(new THREE.Vector3(x * RADIUS, y * RADIUS, z * RADIUS));
+  }
+
+  // ---- nœuds (petites sphères lumineuses) ----
+  const nodeGeo = new THREE.SphereGeometry(0.045, 8, 8);
+  const cyan = new THREE.Color(0x00d4ff);
+  const teal = new THREE.Color(0x1de9b6);
+
+  points.forEach((p, i) => {
+    const t = (p.y / RADIUS + 1) / 2; // 0..1 selon hauteur
+    const col = cyan.clone().lerp(teal, t);
+    const mat = new THREE.MeshBasicMaterial({ color: col });
+    const mesh = new THREE.Mesh(nodeGeo, mat);
+    mesh.position.copy(p);
+    group.add(mesh);
+  });
+
+  // ---- connexions entre nœuds proches (lignes façon topologie) ----
+  const MAX_LINK_DIST = 1.65;
+  const lineVerts = [];
+  const lineColors = [];
+
+  for(let i = 0; i < points.length; i++){
+    for(let j = i+1; j < points.length; j++){
+      const d = points[i].distanceTo(points[j]);
+      if(d < MAX_LINK_DIST){
+        lineVerts.push(points[i].x, points[i].y, points[i].z);
+        lineVerts.push(points[j].x, points[j].y, points[j].z);
+        const t1 = (points[i].y / RADIUS + 1) / 2;
+        const c1 = cyan.clone().lerp(teal, t1);
+        lineColors.push(c1.r, c1.g, c1.b, c1.r, c1.g, c1.b);
+      }
+    }
+  }
+
+  const lineGeo = new THREE.BufferGeometry();
+  lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(lineVerts, 3));
+  lineGeo.setAttribute('color', new THREE.Float32BufferAttribute(lineColors, 3));
+  const lineMat = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.35 });
+  const lines = new THREE.LineSegments(lineGeo, lineMat);
+  group.add(lines);
+
+  // ---- sphère centrale translucide (donne le volume) ----
+  const coreGeo = new THREE.SphereGeometry(RADIUS * 0.94, 32, 32);
+  const coreMat = new THREE.MeshBasicMaterial({
+    color: 0x0a3a5c, transparent: true, opacity: 0.06, wireframe: false
+  });
+  group.add(new THREE.Mesh(coreGeo, coreMat));
+
+  // ---- interaction souris : drag pour tourner, sinon auto-rotation ----
+  let isDragging = false;
+  let prevX = 0, prevY = 0;
+  let velocityX = 0.0016, velocityY = 0.0006; // auto-rotation par défaut
+  let targetVelocityX = velocityX, targetVelocityY = velocityY;
+  let idleTimer = null;
+
+  function onPointerDown(e){
+    isDragging = true;
+    prevX = e.touches ? e.touches[0].clientX : e.clientX;
+    prevY = e.touches ? e.touches[0].clientY : e.clientY;
+    targetVelocityX = 0; targetVelocityY = 0;
+    clearTimeout(idleTimer);
+  }
+  function onPointerMove(e){
+    if(!isDragging) return;
+    const x = e.touches ? e.touches[0].clientX : e.clientX;
+    const y = e.touches ? e.touches[0].clientY : e.clientY;
+    const dx = x - prevX, dy = y - prevY;
+    group.rotation.y += dx * 0.005;
+    group.rotation.x += dy * 0.005;
+    prevX = x; prevY = y;
+  }
+  function onPointerUp(){
+    if(!isDragging) return;
+    isDragging = false;
+    // reprise douce de l'auto-rotation après un court délai
+    idleTimer = setTimeout(()=>{
+      targetVelocityX = 0.0016; targetVelocityY = 0.0006;
+    }, 600);
+  }
+
+  container.addEventListener('mousedown', onPointerDown);
+  window.addEventListener('mousemove', onPointerMove);
+  window.addEventListener('mouseup', onPointerUp);
+  container.addEventListener('touchstart', onPointerDown, {passive:true});
+  window.addEventListener('touchmove', onPointerMove, {passive:true});
+  window.addEventListener('touchend', onPointerUp);
+
+  // léger tilt vers le curseur même hors drag (parallaxe douce)
+  let parallaxX = 0, parallaxY = 0;
+  window.addEventListener('mousemove', (e)=>{
+    if(isDragging) return;
+    const nx = (e.clientX / window.innerWidth) * 2 - 1;
+    const ny = (e.clientY / window.innerHeight) * 2 - 1;
+    parallaxX = nx * 0.15;
+    parallaxY = ny * 0.1;
+  });
+
+  function onResize(){
+    width = container.clientWidth; height = container.clientHeight;
+    if(width === 0 || height === 0) return;
+    camera.aspect = width/height;
+    camera.updateProjectionMatrix();
+    renderer.setSize(width, height);
+  }
+  window.addEventListener('resize', onResize);
+
+  function animate(){
+    requestAnimationFrame(animate);
+    if(!reduceMotion){
+      velocityX += (targetVelocityX - velocityX) * 0.04;
+      velocityY += (targetVelocityY - velocityY) * 0.04;
+      if(!isDragging){
+        group.rotation.y += velocityX;
+        group.rotation.x += velocityY;
+      }
+      group.rotation.x += (parallaxY - 0) * 0.01;
+      group.rotation.y += (parallaxX - 0) * 0.01;
+    }
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+
+
+/* =====================================================================
    FOND RESEAU INTERACTIF — topologie informatique enrichie
 ===================================================================== */
 (function(){
