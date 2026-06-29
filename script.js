@@ -1,124 +1,67 @@
 /* =====================================================================
-   BOOT SCREEN — séquence de démarrage façon terminal ctOS (Watch Dogs)
+   BOOT SCREEN — faux kernel log (style dmesg) — 3 secondes max
 ===================================================================== */
 (function(){
   const bootScreen = document.getElementById('bootScreen');
   const bootLog = document.getElementById('bootLog');
-  const bootFill = document.getElementById('bootFill');
-  const bootPercent = document.getElementById('bootPercent');
-  const bootStatus = document.getElementById('bootStatus');
-  const bootIp = document.getElementById('bootIp');
-  const bootTime = document.getElementById('bootTime');
-  const bootHash = document.getElementById('bootHash');
-  const bootTyping = document.getElementById('bootTyping');
+  const bootLoginRow = document.getElementById('bootLoginRow');
   const siteWrap = document.getElementById('siteWrap');
 
   if(!bootScreen){ return; }
 
   document.body.classList.add('is-booting');
 
-  const LOG_LINES = [
-    { t: 'init kernel module net_topo.sys', ok:true },
-    { t: 'mounting /dev/sisr0', ok:true },
-    { t: 'interface réseau détectée : eth0', ok:true },
-    { t: 'scan plage 10.4.20.0/24', ok:true },
-    { t: 'handshake passerelle 10.4.20.1', ok:true },
-    { t: 'résolution DNS sisr.local', ok:true },
-    { t: 'vérification certificat TLS', ok:true },
-    { t: 'table de routage OSPF chargée', ok:true },
-    { t: 'sync VLAN 10 / 20 / 99', ok:true },
-    { t: 'topologie : 64 nœuds détectés', ok:true },
-    { t: 'pare-feu pfSense actif', ok:true },
-    { t: 'latence moyenne 4ms', ok:true },
-    { t: 'intrusion bloquée — port 22', warn:true },
-    { t: 'canal chiffré AES-256', ok:true },
-    { t: 'profil lucas@sisr chargé', ok:true },
-    { t: 'compilation interface', ok:true },
-    { t: 'accès accordé', ok:true },
-  ];
+  // lignes de log façon kernel Linux, avec quelques mots-clés colorés
+  const LOG_TEXT = [
+    '[    0.000000] Booting Linux on physical CPU 0x0',
+    '[    0.000000] Linux version 6.2.0-sisr (lucas@sisr-build) #1 SMP',
+    '[    0.000000] CPU: ARMv8 Processor [410fd083] revision 3',
+    '[    0.000412] Memory policy: Data cache writealloc',
+    '[    0.000891] PERCPU: Embedded 18 pages/cpu',
+    '[    0.001203] Built 1 zonelists, mobility grouping on. Total pages: 261888',
+    '[    0.041220] pid_max: default: 32768 minimum: 301',
+    '[    0.118044] devtmpfs: initialized',
+    '[    0.204911] NET: Registered protocol family 16',
+    '[    0.311006] NetLabel: protocols = UNLABELED IPv4 IPv6',
+    '[    0.402117] clocksource: switched to clocksource arch_sys_counter',
+    '[    1.169734] EXT4-fs (mmcblk0p2): mounted filesystem with ordered data mode',
+    '[    1.302854] sd 0:0:0:0: [sda] Assuming drive cache: write through',
+    '[    1.410092] Valid path for Logical Volume.',
+    '',
+    '/sisr/portfolio : clean, 1704684/10121989 files, 3813438/7532544 blocks',
+    '<span class="started">Started:</span> Attempting to mount network topology fuse mount.',
+    'See "systemctl status: runNetTopo\\\\fuse.mount" for details.',
+    '',
+    'status: <span class="ok">OK</span> EXT4-fs (sda1): orphan cleanup on readonly fs',
+    'status: <span class="ok">OK</span> EXT4-fs (sda1): recovery complete',
+    'status: <span class="ok">OK</span> EXT4-fs (sda1): mounted filesystem with ordered data mode.',
+    'status: <span class="ok">OK</span> firewall pfSense.rules : 142 entrées chargées',
+    'status: <span class="ok">OK</span> routing table OSPF synchronisée',
+    '',
+    'Scanning 64 nodes for network topology mapping',
+    'Monitoring uplink... ng dmeventd or progress polling.',
+    'init_memory_mapping: [mem 0x00000000-0x00sisr1989]',
+    '',
+  ].join('\n');
 
-  function randomHex(len){
-    let s = '0x';
-    for(let i=0;i<len;i++){ s += Math.floor(Math.random()*16).toString(16); }
-    return s;
-  }
-  function randomIp(){
-    return `${10+Math.floor(Math.random()*180)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;
-  }
+  bootLog.innerHTML = LOG_TEXT;
 
-  let lineIndex = 0;
-  let progress = 0;
-  const totalDuration = 2900;
-  const stepDelay = totalDuration / LOG_LINES.length;
+  const TOTAL_DURATION = 2600; // texte affiché quasi instantanément, comme un vrai boot
+  const LOGIN_DELAY = 1900;
+  const FADE_OUT_AT = 2750;
 
-  function appendLine(){
-    if(lineIndex >= LOG_LINES.length) return;
-    const item = LOG_LINES[lineIndex];
-    const div = document.createElement('div');
-    div.className = 'ln' + (item.ok ? ' ok' : '') + (item.warn ? ' warn' : '');
-    const addr = randomHex(6);
-    div.innerHTML = `<span class="addr">[${addr}]</span> ${item.t}`;
-    bootLog.appendChild(div);
-    while(bootLog.children.length > 7){ bootLog.removeChild(bootLog.firstChild); }
-    lineIndex++;
-  }
+  setTimeout(()=>{
+    if(bootLoginRow) bootLoginRow.hidden = false;
+  }, LOGIN_DELAY);
 
-  // horloge + IP + hash qui défilent en continu (effet "scan" réaliste)
-  const metaInterval = setInterval(()=>{
-    if(bootIp) bootIp.textContent = randomIp();
-    if(bootHash) bootHash.textContent = randomHex(8);
-    if(bootTime){
-      const now = new Date();
-      bootTime.textContent = now.toTimeString().slice(0,8);
-    }
-  }, 160);
-
-  const statusLabels = ['INITIALISATION','CONNEXION RÉSEAU','AUTHENTIFICATION','CHARGEMENT INTERFACE'];
-
-  const logTimer = setInterval(()=>{
-    appendLine();
-    progress = Math.min(100, Math.round((lineIndex/LOG_LINES.length)*100));
-    if(bootFill) bootFill.style.width = progress + '%';
-    if(bootPercent) bootPercent.textContent = progress + '%';
-    if(bootStatus){
-      const idx = Math.min(statusLabels.length-1, Math.floor((progress/100)*statusLabels.length));
-      bootStatus.textContent = statusLabels[idx];
-    }
-    if(lineIndex >= LOG_LINES.length){
-      clearInterval(logTimer);
-      startTypingLine();
-    }
-  }, stepDelay);
-
-  // effet machine à écrire sur la ligne de commande finale
-  function startTypingLine(){
-    const fullText = 'access_granted --user=lucas.bertrand --session=sisr';
-    let i = 0;
-    const typeTimer = setInterval(()=>{
-      if(bootTyping) bootTyping.textContent = fullText.slice(0, i);
-      i++;
-      if(i > fullText.length){
-        clearInterval(typeTimer);
-        clearInterval(metaInterval);
-        setTimeout(finishBoot, 450);
-      }
-    }, 28);
-  }
+  setTimeout(finishBoot, FADE_OUT_AT);
 
   function finishBoot(){
     bootScreen.classList.add('boot-done');
     document.body.classList.remove('is-booting');
     if(siteWrap) siteWrap.classList.add('wrap-visible');
-    setTimeout(()=>{ if(bootScreen.parentNode){ bootScreen.style.display = 'none'; } }, 600);
+    setTimeout(()=>{ if(bootScreen.parentNode){ bootScreen.style.display = 'none'; } }, 450);
   }
-
-  // sécurité : si quelque chose bloque, on force la fin après 7s max
-  setTimeout(()=>{
-    if(!bootScreen.classList.contains('boot-done')){
-      clearInterval(logTimer); clearInterval(metaInterval);
-      finishBoot();
-    }
-  }, 7000);
 })();
 
 
