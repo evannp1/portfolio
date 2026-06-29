@@ -55,6 +55,57 @@
   const REPEL_RADIUS = 170;
   const REPEL_STRENGTH = 28;
 
+  /* ---------- Teinte du fond dérivant selon la section au scroll ---------- */
+  // Chaque section a une teinte cible (RGB de base) ; on interpole en douceur
+  // entre la teinte de la section précédente et celle de la section suivante
+  // selon la position de scroll, puis on lisse encore dans le temps (pas de saut).
+  const SECTION_TINTS = [
+    { id: 'top',      rgb: [0, 170, 235] },   // bleu cyan — hero
+    { id: 'about',    rgb: [0, 190, 215] },   // bleu-cyan doux — profil
+    { id: 'skills',   rgb: [15, 205, 195] },  // transition vers teal — compétences
+    { id: 'projects', rgb: [30, 220, 175] },  // teal franc — projets
+    { id: 'veille',   rgb: [55, 200, 200] },  // teal-bleu — veille
+    { id: 'contact',  rgb: [80, 170, 230] },  // retour vers bleu, plus violacé — contact
+  ];
+  const sectionEls = SECTION_TINTS
+    .map(s => ({ ...s, el: document.getElementById(s.id) }))
+    .filter(s => s.el);
+
+  let currentTint = [0, 170, 235];
+  let targetTint = [0, 170, 235];
+
+  function updateTargetTint(){
+    if(sectionEls.length === 0) return;
+    const viewCenter = window.scrollY + window.innerHeight * 0.4;
+
+    // trouve les deux sections encadrant le centre de vue, interpole entre elles
+    let prev = sectionEls[0];
+    let next = sectionEls[sectionEls.length - 1];
+    for(let i = 0; i < sectionEls.length; i++){
+      const top = sectionEls[i].el.offsetTop;
+      if(top <= viewCenter){ prev = sectionEls[i]; }
+      if(top >= viewCenter && i > 0){ next = sectionEls[i]; break; }
+      next = sectionEls[i];
+    }
+    if(prev === next){
+      targetTint = prev.rgb;
+      return;
+    }
+    const prevTop = prev.el.offsetTop;
+    const nextTop = next.el.offsetTop;
+    const span = Math.max(1, nextTop - prevTop);
+    const localT = Math.max(0, Math.min(1, (viewCenter - prevTop) / span));
+    targetTint = [
+      prev.rgb[0] + (next.rgb[0] - prev.rgb[0]) * localT,
+      prev.rgb[1] + (next.rgb[1] - prev.rgb[1]) * localT,
+      prev.rgb[2] + (next.rgb[2] - prev.rgb[2]) * localT,
+    ];
+  }
+
+  window.addEventListener('scroll', updateTargetTint, { passive: true });
+  window.addEventListener('resize', updateTargetTint);
+  updateTargetTint();
+
   /* ---------- Paquets de données voyageant sur les liaisons ---------- */
   // On précalcule les arêtes "actives" à chaque frame ; les packets choisissent
   // une arête existante et glissent de a -> b avant de réapparaître ailleurs.
@@ -68,6 +119,11 @@
   }
 
   function step(){
+    // dérive douce de la teinte courante vers la teinte cible de la section visible
+    currentTint[0] += (targetTint[0] - currentTint[0]) * 0.02;
+    currentTint[1] += (targetTint[1] - currentTint[1]) * 0.02;
+    currentTint[2] += (targetTint[2] - currentTint[2]) * 0.02;
+
     for(const n of nodes){
       n.x += n.vx; n.y += n.vy;
       if(n.x < -20) n.x = W+20; if(n.x > W+20) n.x = -20;
@@ -92,10 +148,15 @@
 
   function colorAt(x){
     const t = Math.max(0, Math.min(1, x / W));
-    const r = Math.round(0 + t*29);
-    const g = Math.round(150 + t*93);
-    const b = Math.round(225 - t*40);
-    return [r,g,b];
+    // variation horizontale existante (gauche -> droite), modulée par la teinte de section
+    const r = Math.round(currentTint[0] * (0.55 + t*0.45));
+    const g = Math.round(currentTint[1] * (0.85 + t*0.15));
+    const b = Math.round(currentTint[2] * (1.0 - t*0.18));
+    return [
+      Math.max(0, Math.min(255, r)),
+      Math.max(0, Math.min(255, g)),
+      Math.max(0, Math.min(255, b)),
+    ];
   }
 
   function drawRouterIcon(x,y,size,strokeStyle){
