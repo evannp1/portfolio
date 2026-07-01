@@ -31,8 +31,8 @@
     width:100%;height:100%;
     z-index:0;
     background:
-      radial-gradient(ellipse 120% 80% at 15% 20%, rgba(0,90,180,0.35), transparent 60%),
-      radial-gradient(ellipse 100% 90% at 95% 75%, rgba(29,233,182,0.18), transparent 55%),
+      radial-gradient(ellipse 120% 80% at 15% 20%, rgba(0,90,180,0.18), transparent 60%),
+      radial-gradient(ellipse 100% 90% at 95% 75%, rgba(29,233,182,0.08), transparent 55%),
       var(--bg-deep);
   }
 
@@ -232,22 +232,32 @@
   .projects{display:flex; flex-direction:column; gap:1px; border:1px solid var(--line);}
   .project{
     background:var(--bg-panel);
-    display:grid; grid-template-columns:90px 1fr auto;
-    gap:28px;
-    padding:32px 32px;
-    align-items:start;
     border-bottom:1px solid var(--line);
     transition:background 0.3s;
     position:relative;
   }
   .project:last-child{border-bottom:none;}
   .project:hover{background:var(--bg-panel-2);}
+
+  .project-trigger{
+    all:unset;
+    box-sizing:border-box;
+    width:100%;
+    display:grid; grid-template-columns:90px 1fr auto;
+    gap:28px;
+    padding:32px 32px;
+    align-items:start;
+    cursor:pointer;
+  }
+  .project-trigger:focus-visible{outline:2px solid var(--cyan); outline-offset:-2px;}
+
   .project .pid{
     font-family:var(--mono); font-size:13px; color:var(--text-dim); padding-top:4px;
   }
   .project .pbody h3{
     font-family:var(--display); font-size:22px; font-weight:600; margin-bottom:10px;
     display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    text-align:left;
   }
   .status{
     font-family:var(--mono); font-size:10.5px; padding:3px 9px; border-radius:20px;
@@ -255,7 +265,7 @@
   }
   .status.deploye{background:rgba(29,233,182,0.12); color:var(--teal); border:1px solid rgba(29,233,182,0.3);}
   .status.cours{background:rgba(0,212,255,0.1); color:var(--cyan); border:1px solid rgba(0,212,255,0.3);}
-  .project p{color:var(--text-dim); font-size:14.5px; line-height:1.7; max-width:580px;}
+  .project p{color:var(--text-dim); font-size:14.5px; line-height:1.7; max-width:580px; text-align:left;}
   .stack{
     display:flex; gap:8px; flex-wrap:wrap; margin-top:16px;
   }
@@ -266,6 +276,67 @@
   .project .pmeta{
     font-family:var(--mono); font-size:12px; color:var(--text-dim); text-align:right; padding-top:4px;
     white-space:nowrap;
+    display:flex; flex-direction:column; align-items:flex-end; gap:14px;
+  }
+
+  .project-chevron{
+    display:inline-block;
+    font-size:14px;
+    color:var(--cyan);
+    transition:transform 0.3s ease;
+  }
+  .project-trigger[aria-expanded="true"] .project-chevron{
+    transform:rotate(180deg);
+  }
+
+  /* ---------- PROJETS — détail accordéon ---------- */
+  .project-detail{
+    display:grid;
+    grid-template-rows:0fr;
+    transition:grid-template-rows 0.38s ease;
+  }
+  .project-trigger[aria-expanded="true"] + .project-detail{
+    grid-template-rows:1fr;
+  }
+  .project-detail-inner{
+    overflow:hidden;
+    min-height:0;
+  }
+  .project-detail .project-detail-inner > *{
+    padding:0 32px 32px;
+  }
+  .project-gallery{
+    display:grid; grid-template-columns:repeat(2, 1fr); gap:14px;
+  }
+  .project-img-placeholder{
+    aspect-ratio:16/10;
+    border:1px dashed var(--line);
+    border-radius:2px;
+    display:flex; align-items:center; justify-content:center;
+    text-align:center;
+    font-family:var(--mono); font-size:12px; color:var(--text-dim);
+    padding:16px;
+    background:rgba(255,255,255,0.012);
+  }
+  .project-detail-text{
+    padding-top:24px;
+  }
+  .project-detail-text h4{
+    font-family:var(--display); font-size:15px; font-weight:600;
+    color:var(--text-main); margin-bottom:10px;
+  }
+  .project-detail-text p{
+    color:var(--text-dim); font-size:14px; line-height:1.7; max-width:680px;
+    margin-bottom:10px;
+  }
+  .project-link-hint{
+    font-family:var(--mono); font-size:11.5px !important;
+    color:var(--teal) !important;
+    opacity:0.75;
+  }
+
+  @media (max-width:560px){
+    .project-gallery{ grid-template-columns:1fr; }
   }
 
   /* ---------- VEILLE / TIMELINE ---------- */
@@ -277,9 +348,46 @@
     width:9px;height:9px;border-radius:50%;
     background:var(--bg-deep); border:2px solid var(--cyan);
   }
-  .tl-item h4{font-family:var(--display); font-size:17px; margin-bottom:6px;}
+  .tl-item h4{font-family:var(--display); font-size:17px; margin-bottom:6px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;}
   .tl-item .date{font-family:var(--mono); font-size:11.5px; color:var(--teal); margin-bottom:8px; display:block;}
   .tl-item p{color:var(--text-dim); font-size:14.5px; max-width:600px; line-height:1.7;}
+
+  /* ---------- CERTIFICATIONS ---------- */
+  .certs-grid{
+    display:flex; flex-direction:column; gap:1px;
+    border:1px solid var(--line);
+  }
+  .cert-card{
+    background:var(--bg-panel);
+    display:grid; grid-template-columns:44px 1fr auto;
+    align-items:center; gap:20px;
+    padding:22px 28px;
+    border-bottom:1px solid var(--line);
+    transition:background 0.3s;
+  }
+  .cert-card:last-child{border-bottom:none;}
+  .cert-card:hover{background:var(--bg-panel-2);}
+  .cert-card.cert-placeholder{ opacity:0.45; }
+  .cert-icon{
+    font-size:20px; color:var(--teal);
+    font-family:var(--mono);
+    text-align:center;
+  }
+  .cert-body{display:flex; flex-direction:column; gap:4px;}
+  .cert-issuer{
+    font-family:var(--mono); font-size:11px; color:var(--teal);
+    letter-spacing:0.08em; text-transform:uppercase;
+  }
+  .cert-body h4{
+    font-family:var(--display); font-size:16px; font-weight:600; color:var(--text-main);
+  }
+  .cert-date{
+    font-family:var(--mono); font-size:11.5px; color:var(--text-dim);
+  }
+
+  @media (max-width:560px){
+    .cert-card{ grid-template-columns:1fr; gap:10px; }
+  }
 
   /* ---------- CONTACT ---------- */
   .contact-term{
@@ -314,8 +422,8 @@
     nav.links{display:none;}
     .about-grid{grid-template-columns:1fr; gap:40px;}
     .skills-grid{grid-template-columns:1fr;}
-    .project{grid-template-columns:1fr; gap:10px;}
-    .project .pmeta{text-align:left;}
+    .project-trigger{grid-template-columns:1fr; gap:10px;}
+    .project .pmeta{text-align:left; align-items:flex-start; flex-direction:row; justify-content:space-between;}
     section{padding:100px 6vw 80px;}
   }
 
