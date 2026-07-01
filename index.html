@@ -1,10 +1,3 @@
-  <!-- Ajouter parcours etc ... Un cv telechargeables ... Les differentes Certif a renseigner pix secnum etc ... -->
-
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -31,6 +24,8 @@
       <a href="#skills">Compétences</a>
       <a href="#projects">Projets</a>
       <a href="#veille">Veille</a>
+      <a href="#parcours">Parcours</a>
+      <a href="#certifications">Certifications</a>
       <a href="#contact">Contact</a>
     </nav>
   </header>
@@ -121,44 +116,104 @@ Ce portfolio présente les différents projets que j'ai réalisés au cours de m
     </div>
     <div class="projects">
 
-      <div class="project">
-        <div class="pid">P.01</div>
-        <div class="pbody">
-          <h3>Déploiement automatisé de postes via FOG + Active Directory <span class="status deploye">testé</span></h3>
-          <p>Mise en place d'une chaîne d'imagerie réseau sur Hyper-V : serveur FOG (Debian) couplé à un contrôleur de domaine AD. Capture d'un poste master (Sysprep + unattend.xml) et déploiement automatisé avec jonction au domaine via FOG Client.</p>
-          <div class="stack"><span>FOG Project</span><span>Hyper-V</span><span>Active Directory</span></div>
+      <div class="project" data-project>
+        <button class="project-trigger" type="button" aria-expanded="false">
+          <div class="pid">P.01</div>
+          <div class="pbody">
+            <h3>Déploiement automatisé de postes via FOG + Active Directory <span class="status deploye">testé</span></h3>
+            <p>Mise en place d'une chaîne d'imagerie réseau sur Hyper-V : serveur FOG (Debian) couplé à un contrôleur de domaine AD. Capture d'un poste master (Sysprep + unattend.xml) et déploiement automatisé avec jonction au domaine via FOG Client.</p>
+            <div class="stack"><span>FOG Project</span><span>Hyper-V</span><span>Active Directory</span></div>
+          </div>
+          <div class="pmeta">Projet de stage — labo virtualisé<br>1ᵉ année<span class="project-chevron">▾</span></div>
+        </button>
+        <div class="project-detail">
+          <div class="project-detail-inner">
+            <div class="project-gallery">
+              <div class="project-img-placeholder">+ Ajouter une capture (ex : interface FOG)</div>
+              <div class="project-img-placeholder">+ Ajouter une capture (ex : poste déployé)</div>
+            </div>
+            <div class="project-detail-text">
+              <h4>Détail de la réalisation</h4>
+              <p>Décris ici plus précisément les étapes : préparation du poste master, configuration du serveur FOG, paramétrage de l'unattend.xml, tests de déploiement sur plusieurs machines, difficultés rencontrées et solutions apportées.</p>
+              <p class="project-link-hint">Remplace ce texte et les images par les détails réels de ton projet.</p>
+            </div>
+          </div>
         </div>
-        <div class="pmeta">Projet de stage — labo virtualisé<br>1ᵉ année</div>
       </div>
 
-      <div class="project">
-        <div class="pid">P.02</div>
-        <div class="pbody">
-          <h3>Messagerie collaborative auto-hébergée — Rocket.Chat <span class="status deploye">testé</span></h3>
-          <p>Déploiement d'une solution de messagerie d'équipe en local via Docker Compose (Rocket.Chat + MongoDB). Configuration des canaux, des rôles utilisateurs .</p>
-          <div class="stack"><span>Rocket.Chat</span><span>MongoDB</span><span>Docker</span></div>
+      <div class="project" data-project>
+        <button class="project-trigger" type="button" aria-expanded="false">
+          <div class="pid">P.02</div>
+          <div class="pbody">
+            <h3>Messagerie collaborative auto-hébergée — Rocket.Chat <span class="status deploye">testé</span></h3>
+            <p>Déploiement d'une solution de messagerie d'équipe en local via Docker Compose (Rocket.Chat + MongoDB). Configuration des canaux, des rôles utilisateurs .</p>
+            <div class="stack"><span>Rocket.Chat</span><span>MongoDB</span><span>Docker</span></div>
+          </div>
+          <div class="pmeta">Projet de stage — labo virtualisé 1ᵉ année<span class="project-chevron">▾</span></div>
+        </button>
+        <div class="project-detail">
+          <div class="project-detail-inner">
+            <div class="project-gallery">
+              <div class="project-img-placeholder">+ Ajouter une capture (ex : docker-compose.yml)</div>
+              <div class="project-img-placeholder">+ Ajouter une capture (ex : interface Rocket.Chat)</div>
+            </div>
+            <div class="project-detail-text">
+              <h4>Détail de la réalisation</h4>
+              <p>Décris ici la configuration Docker Compose, les volumes utilisés, la création des canaux et rôles, ainsi que les éventuels tests de charge ou de sauvegarde réalisés.</p>
+              <p class="project-link-hint">Remplace ce texte et les images par les détails réels de ton projet.</p>
+            </div>
+          </div>
         </div>
-        <div class="pmeta">Projet de stage — labo virtualisé 1ᵉ année</div>
       </div>
 
-      <div class="project">
-        <div class="pid">P.03</div>
-        <div class="pbody">
-          <h3>.<span class="status cours">En cours</span></h3>
-          <p>.</p>
-          <div class="stack"><span>.</span><span>.</span><span>.</span></div>
+      <div class="project" data-project>
+        <button class="project-trigger" type="button" aria-expanded="false">
+          <div class="pid">P.03</div>
+          <div class="pbody">
+            <h3>Supervision d'infrastructure en alternance <span class="status cours">En cours</span></h3>
+            <p>Mise en place d'une supervision centralisée (Centreon) sur le parc client : serveurs, switchs, liens WAN. Configuration d'alertes par seuil et tableau de bord pour l'équipe support.</p>
+            <div class="stack"><span>Centreon</span><span>SNMP</span><span>Grafana</span></div>
+          </div>
+          <div class="pmeta">Mission alternance<br>2025–2026<span class="project-chevron">▾</span></div>
+        </button>
+        <div class="project-detail">
+          <div class="project-detail-inner">
+            <div class="project-gallery">
+              <div class="project-img-placeholder">+ Ajouter une capture (ex : dashboard Centreon)</div>
+              <div class="project-img-placeholder">+ Ajouter une capture (ex : configuration SNMP)</div>
+            </div>
+            <div class="project-detail-text">
+              <h4>Détail de la réalisation</h4>
+              <p>Décris ici les équipements supervisés, les seuils d'alerte configurés, et un exemple concret d'incident détecté grâce à cette supervision.</p>
+              <p class="project-link-hint">Remplace ce texte et les images par les détails réels de ton projet.</p>
+            </div>
+          </div>
         </div>
-        <div class="pmeta">.<br>.</div>
       </div>
 
-      <div class="project">
-        <div class="pid">P.04</div>
-        <div class="pbody">
-          <h3>VPN site-à-site multi-agences <span class="status deploye">Déployé</span></h3>
-          <p>Interconnexion sécurisée de deux sites distants via tunnel IPsec sur pare-feu pfSense, avec bascule automatique sur lien de secours 4G en cas de coupure de la ligne principale.</p>
-          <div class="stack"><span>pfSense</span><span>IPsec</span><span>Failover WAN</span></div>
+      <div class="project" data-project>
+        <button class="project-trigger" type="button" aria-expanded="false">
+          <div class="pid">P.04</div>
+          <div class="pbody">
+            <h3>VPN site-à-site multi-agences <span class="status deploye">Déployé</span></h3>
+            <p>Interconnexion sécurisée de deux sites distants via tunnel IPsec sur pare-feu pfSense, avec bascule automatique sur lien de secours 4G en cas de coupure de la ligne principale.</p>
+            <div class="stack"><span>pfSense</span><span>IPsec</span><span>Failover WAN</span></div>
+          </div>
+          <div class="pmeta">Projet de classe<br>1ʳᵉ année<span class="project-chevron">▾</span></div>
+        </button>
+        <div class="project-detail">
+          <div class="project-detail-inner">
+            <div class="project-gallery">
+              <div class="project-img-placeholder">+ Ajouter une capture (ex : config pfSense)</div>
+              <div class="project-img-placeholder">+ Ajouter un schéma de topologie</div>
+            </div>
+            <div class="project-detail-text">
+              <h4>Détail de la réalisation</h4>
+              <p>Décris ici la configuration du tunnel IPsec, le paramétrage du failover 4G, et les tests de coupure réalisés pour valider la bascule automatique.</p>
+              <p class="project-link-hint">Remplace ce texte et les images par les détails réels de ton projet.</p>
+            </div>
+          </div>
         </div>
-        <div class="pmeta">Projet de classe<br>1ʳᵉ année</div>
       </div>
 
     </div>
@@ -189,9 +244,70 @@ Ce portfolio présente les différents projets que j'ai réalisés au cours de m
     </div>
   </section>
 
-  <section id="contact">
+  <section id="parcours">
     <div class="sec-head">
       <span class="sec-num">05</span>
+      <h2>Parcours scolaire</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="timeline">
+      <div class="tl-item">
+        <span class="date">2025 — 2027</span>
+        <h4>BTS SIO — option SISR <span class="status cours">En cours</span></h4>
+        <p>Lycée François Rabelais, Saint-Brieuc. Spécialisation en solutions d'infrastructure, systèmes et réseaux : administration serveurs Windows/Linux, sécurité périmétrique, virtualisation et supervision réseau.</p>
+      </div>
+      <div class="tl-item">
+        <span class="date">2022 — 2025</span>
+        <h4>Baccalauréat Professionnel Systèmes Numériques <span class="status deploye">Obtenu — Mention Bien</span></h4>
+        <p>Premières bases en câblage réseau, configuration d'équipements actifs et maintenance de parc informatique. Découverte des environnements Linux et Windows Server.</p>
+      </div>
+      <div class="tl-item">
+        <span class="date">2022</span>
+        <h4>Brevet des collèges</h4>
+        <p>Premiers projets de découverte numérique en option technologie, point de départ de l'envie de se spécialiser en informatique.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="certifications">
+    <div class="sec-head">
+      <span class="sec-num">06</span>
+      <h2>Certifications</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="certs-grid">
+      <div class="cert-card">
+        <div class="cert-icon">◈</div>
+        <div class="cert-body">
+          <span class="cert-issuer">Cisco</span>
+          <h4>CCNA — Introduction to Networks</h4>
+          <span class="cert-date">2025</span>
+        </div>
+        <span class="status deploye">Obtenu</span>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon">◈</div>
+        <div class="cert-body">
+          <span class="cert-issuer">Microsoft</span>
+          <h4>AZ-900 — Azure Fundamentals</h4>
+          <span class="cert-date">À remplacer par ta vraie certification</span>
+        </div>
+        <span class="status cours">En cours</span>
+      </div>
+      <div class="cert-card cert-placeholder">
+        <div class="cert-icon">+</div>
+        <div class="cert-body">
+          <span class="cert-issuer">—</span>
+          <h4>Ajoute ici ta certification</h4>
+          <span class="cert-date">Remplis avec tes vraies certifications</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="sec-head">
+      <span class="sec-num">07</span>
       <h2>Contact</h2>
       <div class="sec-rule"></div>
     </div>
@@ -203,15 +319,10 @@ Ce portfolio présente les différents projets que j'ai réalisés au cours de m
       <div class="term-body">
         <div><span class="p">$</span> <span class="cmd">whoami --contact</span></div>
         <span class="out">Evann Pietot — Étudiant BTS SIO SISR</span>
-        <div class="cv-box">
-  <a href="cv/Evann_CV.pdf" download class="cv-btn">
-    📄 Télécharger mon CV
-  </a>
-</div>
         <span class="out">Mail : <a href="mailto:?">?</a></span>
         <span class="out">Téléphone : ?</span>
         <span class="out">LinkedIn : <a href="#" target="_blank" rel="noopener">linkedin.com</a></span>
-        <span class="out">GitHub : <a href="https://github.com/evannp1/" target="_blank" rel="noopener">github.com/evannp1</a></span>
+        <span class="out">GitHub : <a href="#" target="_blank" rel="noopener">github.com/evannp1</a></span>
         <div style="margin-top:14px;"><span class="p">$</span> <span class="cursor-blink"></span></div>
       </div>
     </div>
