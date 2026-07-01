@@ -1,4 +1,20 @@
 /* =====================================================================
+   PROJETS — accordéon dépliable au clic
+===================================================================== */
+(function(){
+  const triggers = document.querySelectorAll('.project-trigger');
+  if(triggers.length === 0) return;
+
+  triggers.forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+      trigger.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+    });
+  });
+})();
+
+
+/* =====================================================================
    FOND RESEAU INTERACTIF — topologie informatique enrichie
 ===================================================================== */
 (function(){
@@ -198,7 +214,7 @@
         const dx = ax-bx, dy = ay-by;
         const dist = Math.sqrt(dx*dx+dy*dy);
         if(dist < MAX_DIST){
-          const opacity = (1 - dist/MAX_DIST) * 0.24;
+          const opacity = (1 - dist/MAX_DIST) * 0.13;
           const [r,g,b2] = colorAt(ax);
           ctx.strokeStyle = `rgba(${r},${g},${b2},${opacity})`;
           ctx.lineWidth = 0.65;
@@ -243,9 +259,9 @@
       const pulse = n.type !== 'point' ? (0.5 + Math.sin(n.pulsePhase)*0.5) : 1;
 
       if(n.glow){
-        const glowR = n.type === 'point' ? 13 : 20;
+        const glowR = n.type === 'point' ? 8 : 13;
         const grad = ctx.createRadialGradient(x,y,0,x,y,glowR);
-        grad.addColorStop(0, `rgba(${cr},${cg},${cb},${0.5*pulse})`);
+        grad.addColorStop(0, `rgba(${cr},${cg},${cb},${0.28*pulse})`);
         grad.addColorStop(1, `rgba(${cr},${cg},${cb},0)`);
         ctx.fillStyle = grad;
         ctx.beginPath();
@@ -253,7 +269,7 @@
         ctx.fill();
       }
 
-      const strokeColor = `rgba(${cr},${cg},${cb},0.85)`;
+      const strokeColor = `rgba(${cr},${cg},${cb},0.55)`;
 
       if(n.type === 'router'){
         drawRouterIcon(x,y,n.r+1.4,strokeColor);
@@ -270,7 +286,7 @@
         drawServerIcon(x,y,n.r+1.2,strokeColor);
       }
 
-      ctx.fillStyle = `rgba(${cr},${cg},${cb},0.92)`;
+      ctx.fillStyle = `rgba(${cr},${cg},${cb},0.65)`;
       ctx.beginPath();
       ctx.arc(x,y,n.r,0,Math.PI*2);
       ctx.fill();
