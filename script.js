@@ -11,6 +11,12 @@
       trigger.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
     });
   });
+
+  // Empêche les clics dans la zone détail (images, texte) de remonter
+  // jusqu'au trigger et de refermer l'accordéon accidentellement
+  document.querySelectorAll('.project-detail').forEach(detail => {
+    detail.addEventListener('click', e => e.stopPropagation());
+  });
 })();
 
 
