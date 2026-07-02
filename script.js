@@ -1,5 +1,5 @@
 /* =====================================================================
-   PROJETS — accordéon dépliable au clic
+   PROJETS — accordéon dépliable au clic (approche max-height JS)
 ===================================================================== */
 (function(){
   const triggers = document.querySelectorAll('.project-trigger');
@@ -7,13 +7,26 @@
 
   triggers.forEach(trigger => {
     trigger.addEventListener('click', () => {
-      const isOpen = trigger.getAttribute('aria-expanded') === 'true';
-      trigger.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+      const project = trigger.closest('.project');
+      const detail  = project.querySelector('.project-detail');
+      const hint    = project.querySelector('.project-hint');
+      const isOpen  = trigger.getAttribute('aria-expanded') === 'true';
+
+      if(isOpen){
+        // fermeture
+        trigger.setAttribute('aria-expanded', 'false');
+        detail.classList.remove('is-open');
+        if(hint) hint.classList.remove('is-hidden');
+      } else {
+        // ouverture
+        trigger.setAttribute('aria-expanded', 'true');
+        detail.classList.add('is-open');
+        if(hint) hint.classList.add('is-hidden');
+      }
     });
   });
 
-  // Empêche les clics dans la zone détail (images, texte) de remonter
-  // jusqu'au trigger et de refermer l'accordéon accidentellement
+  // Empêche les clics dans la zone détail de refermer l'accordéon
   document.querySelectorAll('.project-detail').forEach(detail => {
     detail.addEventListener('click', e => e.stopPropagation());
   });
