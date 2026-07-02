@@ -321,3 +321,58 @@
   }
   loop();
 })();
+
+
+/* =====================================================================
+   NAV ACTIVE + BARRE DE PROGRESSION SCROLL
+===================================================================== */
+(function(){
+  const progressBar    = document.getElementById('scrollProgress');
+  const navLinks       = document.querySelectorAll('nav.links a[data-nav]');
+  const currentSection = document.getElementById('navCurrentSection');
+
+  // sections à observer — dans l'ordre d'apparition dans la page
+  const SECTION_IDS = ['top','about','skills','projects','veille','parcours','certifications','contact'];
+
+  const sections = SECTION_IDS
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
+
+  const navMap = {};
+  navLinks.forEach(a => { navMap[a.dataset.nav] = a; });
+
+  function setActive(id){
+    navLinks.forEach(a => a.classList.remove('nav-active'));
+    const activeLink = navMap[id];
+    if(activeLink){
+      activeLink.classList.add('nav-active');
+      if(currentSection) currentSection.textContent = '/ ' + activeLink.textContent.trim();
+    } else {
+      if(currentSection) currentSection.textContent = '';
+    }
+  }
+
+  function onScroll(){
+    // --- barre de progression ---
+    const scrollTop  = window.scrollY;
+    const docHeight  = document.documentElement.scrollHeight - window.innerHeight;
+    const pct        = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    if(progressBar) progressBar.style.width = pct + '%';
+
+    // --- section active ---
+    // on cherche la dernière section dont le haut est au-dessus du milieu de l'écran
+    const trigger = scrollTop + window.innerHeight * 0.35;
+    let activeId = null;
+
+    for(const sec of sections){
+      if(sec.offsetTop <= trigger){
+        activeId = sec.id;
+      }
+    }
+    setActive(activeId);
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  onScroll(); // init au chargement
+})();
