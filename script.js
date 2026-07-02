@@ -76,12 +76,14 @@
   // entre la teinte de la section précédente et celle de la section suivante
   // selon la position de scroll, puis on lisse encore dans le temps (pas de saut).
   const SECTION_TINTS = [
-    { id: 'top',      rgb: [0, 170, 235] },   // bleu cyan — hero
-    { id: 'about',    rgb: [0, 190, 215] },   // bleu-cyan doux — profil
-    { id: 'skills',   rgb: [15, 205, 195] },  // transition vers teal — compétences
-    { id: 'projects', rgb: [30, 220, 175] },  // teal franc — projets
-    { id: 'veille',   rgb: [55, 200, 200] },  // teal-bleu — veille
-    { id: 'contact',  rgb: [80, 170, 230] },  // retour vers bleu, plus violacé — contact
+    { id: 'top',            rgb: [0, 170, 235] },
+    { id: 'about',          rgb: [0, 190, 215] },
+    { id: 'skills',         rgb: [15, 205, 195] },
+    { id: 'projects',       rgb: [30, 220, 175] },
+    { id: 'veille',         rgb: [55, 200, 200] },
+    { id: 'parcours',       rgb: [40, 185, 215] },
+    { id: 'certifications', rgb: [60, 175, 225] },
+    { id: 'contact',        rgb: [80, 170, 230] },
   ];
   const sectionEls = SECTION_TINTS
     .map(s => ({ ...s, el: document.getElementById(s.id) }))
