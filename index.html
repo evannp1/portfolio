@@ -138,7 +138,46 @@ Ce portfolio présente les différents projets que j'ai réalisés au cours de m
             </div>
             <div class="project-detail-text">
               <h4>Détail de la réalisation</h4>
-              <p>Décris ici plus précisément les étapes : préparation du poste master, configuration du serveur FOG, paramétrage de l'unattend.xml, tests de déploiement sur plusieurs machines, difficultés rencontrées et solutions apportées.</p>
+              <p>Contexte et objectif
+Dans le cadre d'un projet de lab personnel en 1ère année, j'ai mis en place une infrastructure complète de déploiement automatisé de postes Windows, reproduisant les pratiques utilisées en entreprise pour la gestion de parc informatique. L'objectif était de pouvoir déployer un poste Windows configuré et joint au domaine en quelques minutes, sans intervention manuelle sur chaque machine.
+
+Infrastructure mise en place
+L'environnement repose sur Microsoft Hyper-V avec trois types de machines virtuelles :
+
+Un serveur FOG sous Debian 12 (génération 1, pour éviter les conflits EFI) hébergeant les services DHCP, TFTP, NFS et l'interface web de gestion
+Un contrôleur de domaine Windows Server avec Active Directory DS et DNS intégré, domaine gigafog.local
+Un poste master Windows 10/11 servant de modèle de référence pour les déploiements
+
+Le réseau a été soigneusement planifié avec des adresses IP fixes pour les serveurs (AD : 192.168.1.106, FOG : 192.168.1.120) et une plage DHCP pour les postes clients, avec distribution automatique du DNS et du suffixe de domaine via les options DHCP de FOG.
+
+Préparation du poste master
+La préparation du poste master a nécessité plusieurs étapes préalables avant toute capture :
+
+Désactivation de BitLocker pour permettre à FOG de monter la partition NTFS en lecture
+Désactivation de l'hibernation et du démarrage rapide (powercfg /hibernate off) pour éviter l'état "unclean filesystem" au moment de la capture
+Suppression du package MicrosoftOfficeHub qui bloquait systématiquement le processus Sysprep
+Installation du FOG Client (agent léger) permettant la communication entre le poste déployé et le serveur FOG pour l'exécution automatique des tâches post-déploiement
+Création d'un fichier de réponse unattend.xml pour bypasser l'écran OOBE (Out-Of-Box Experience) au premier démarrage, permettant à l'utilisateur d'arriver directement sur l'écran de connexion Windows sans passer par les étapes de configuration initiale
+Sysprep (/generalize /oobe /shutdown) pour généraliser l'image (nouveau SID unique pour chaque clone, suppression des informations spécifiques à la machine)
+
+
+Configuration du serveur FOG
+Côté serveur, plusieurs configurations ont été nécessaires :
+
+DHCP : configuration des options domain-name-servers et domain-name pour que chaque machine déployée reçoive automatiquement le bon serveur DNS et le suffixe de domaine sans manipulation manuelle
+NFS : création des dossiers /images et /images/dev avec les fichiers .mntcheck nécessaires au montage par FOG lors des captures/déploiements
+Active Directory Defaults : configuration dans l'interface FOG des identifiants de jonction au domaine (nom de domaine, compte Administrateur, mot de passe) appliqués automatiquement à chaque déploiement
+
+
+Processus de capture et déploiement
+La capture de l'image s'effectue via boot PXE : le poste master (éteint après Sysprep) démarre sur le réseau, FOG le reconnaît par son adresse MAC et lance automatiquement la capture en mode Multiple Partition Image - Single Disk, préservant toutes les partitions Windows (EFI, MSR, système, récupération).
+Le déploiement sur une nouvelle VM suit le même principe : création d'une VM vide sans OS, boot PXE, enregistrement dans FOG via Quick Registration, assignation de l'image et configuration de la jonction AD, puis lancement du déploiement. En fin de processus, le FOG Client exécute automatiquement la jonction au domaine gigafog.local et redémarre la machine — qui est alors immédiatement utilisable avec un compte de domaine.
+
+Difficultés rencontrées et solutions
+DifficultéSolution apportéeErreur Exec format error au boot PXEPassage de snponly.efi à ipxe.efi dans la config DHCPBitLocker bloquant la captureDésactivation complète avant SysprepSysprep bloqué par MicrosoftOfficeHubSuppression du package via PowerShell avant SysprepDHCP FOG distribuant le mauvais DNSAjout manuel des options domain-name-servers dans dhcpd.confConflit d'IP entre serveur AD et FOGAttribution d'IPs fixes distinctes sur chaque serveurFOG Client déclenchant un redémarrage intempestifDésactivation temporaire de la tâche AD join sur le host masterPartition NTFS en état "unclean"Désactivation du démarrage rapide et extinction propre avant capture
+
+Résultat
+La chaîne de déploiement est pleinement fonctionnelle : à partir d'une VM vide, le déploiement complet (boot PXE → image → jonction domaine → prêt à l'emploi) s'effectue en environ 15 à 20 minutes sans aucune intervention manuelle, contre plusieurs heures pour une installation Windows traditionnelle poste par poste.</p>
               <p class="project-link-hint">Remplace ce texte et les images par les détails réels de ton projet.</p>
             </div>
           </div>
