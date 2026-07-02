@@ -291,22 +291,19 @@
 
   /* ---------- PROJETS — détail accordéon ---------- */
   .project-detail{
-    display:grid;
-    grid-template-rows:0fr;
-    transition:grid-template-rows 0.38s ease;
+    max-height:0;
+    overflow:hidden;
+    transition:max-height 0.42s ease;
   }
-  .project-trigger[aria-expanded="true"] + .project-detail{
-    grid-template-rows:1fr;
+  .project-detail.is-open{
+    max-height:1200px;
   }
   .project-detail-inner{
-    overflow:hidden;
-    min-height:0;
-  }
-  .project-detail .project-detail-inner > *{
     padding:0 32px 32px;
   }
   .project-gallery{
     display:grid; grid-template-columns:repeat(2, 1fr); gap:14px;
+    margin-bottom:0;
   }
   .project-hint{
     font-family:var(--mono); font-size:11px;
@@ -314,8 +311,9 @@
     padding:0 32px 10px;
     letter-spacing:0.06em;
     animation:hintPulse 2.5s ease-in-out infinite;
+    transition:opacity 0.2s;
   }
-  .project-trigger[aria-expanded="true"] + .project-hint{
+  .project-hint.is-hidden{
     display:none;
   }
   @keyframes hintPulse{
