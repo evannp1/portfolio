@@ -203,7 +203,61 @@ La chaîne de déploiement est pleinement fonctionnelle : à partir d'une VM vid
             </div>
             <div class="project-detail-text">
               <h4>Détail de la réalisation</h4>
-              <p>Décris ici la configuration Docker Compose, les volumes utilisés, la création des canaux et rôles, ainsi que les éventuels tests de charge ou de sauvegarde réalisés.</p>
+              <p>Contexte et objectif
+Dans le cadre d'un projet personnel, j'ai déployé une solution de messagerie collaborative auto-hébergée en remplacement d'outils cloud comme Slack ou Teams, dans une logique de souveraineté des données et de maîtrise de l'infrastructure. L'objectif était de mettre en place un service de communication interne opérationnel, administrable et indépendant de tout service tiers.
+
+Infrastructure mise en place
+Le déploiement repose sur une VM dédiée (Debian/Ubuntu) hébergeant l'ensemble de la stack via Docker Compose, composée de deux conteneurs principaux :
+
+Rocket.Chat : l'application de messagerie web
+MongoDB : la base de données utilisée par Rocket.Chat pour stocker les messages, utilisateurs et configurations
+
+L'utilisation de Docker Compose permet de gérer les deux services de manière cohérente (démarrage, arrêt, mise à jour) via un fichier docker-compose.yml unique, avec des volumes persistants pour garantir la conservation des données même en cas de redémarrage ou de mise à jour des conteneurs.
+
+Déploiement via Docker Compose
+Le fichier docker-compose.yml définit les deux services avec leurs dépendances, variables d'environnement et volumes :
+yamlversion: '3'
+services:
+  rocketchat:
+    image: rocket.chat:latest
+    restart: always
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/rocketchat
+      - ROOT_URL=http://192.168.1.x:3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:5.0
+    restart: always
+    volumes:
+      - ./data/db:/data/db
+Le démarrage s'effectue avec :
+bashdocker compose up -d
+
+Configuration de Rocket.Chat
+Une fois l'instance démarrée et accessible via le navigateur, plusieurs éléments ont été configurés :
+Gestion des utilisateurs et rôles :
+
+Création d'un compte administrateur principal
+Création de comptes utilisateurs supplémentaires pour les tests
+Attribution des rôles : admin, user, moderator selon les besoins
+Configuration des permissions par rôle (qui peut créer des canaux, inviter des membres, supprimer des messages, etc.)
+
+Configuration générale :
+
+Personnalisation du nom de l'instance et du logo
+Paramétrage des options d'inscription (inscription ouverte ou sur invitation uniquement)
+Configuration des notifications
+
+
+Difficultés rencontrées et solutions
+DifficultéSolution apportéeVersion MongoDB incompatible avec Rocket.ChatUtilisation de MongoDB 5.0 spécifiquement requis par la version de Rocket.ChatPersistance des données après redémarrageAjout de volumes Docker montés sur le système hôteAccès à l'interface d'administration bloquéReconfiguration du compte admin via les variables d'environnement au premier démarrage
+
+Résultat
+L'instance Rocket.Chat est pleinement opérationnelle et accessible depuis le réseau local. Les utilisateurs peuvent s'authentifier, communiquer via des messages directs et des canaux, avec une administration centralisée des comptes et des permissions.</p>
               <p class="project-link-hint">Remplace ce texte et les images par les détails réels de ton projet.</p>
             </div>
           </div>
