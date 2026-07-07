@@ -375,6 +375,73 @@
     color:var(--text-dim); font-size:14px; line-height:1.7; max-width:680px;
     margin-bottom:10px;
   }
+  .project-detail-text .detail-section{
+    margin-bottom:22px;
+  }
+  .project-detail-text .detail-section h5{
+    font-family:var(--mono); font-size:12px; color:var(--cyan);
+    letter-spacing:0.08em; text-transform:uppercase;
+    margin-bottom:10px; padding-bottom:6px;
+    border-bottom:1px solid var(--line);
+  }
+  .project-detail-text ul{
+    list-style:none; margin:0 0 10px 0; padding:0;
+  }
+  .project-detail-text ul li{
+    font-size:14px; color:var(--text-dim); line-height:1.65;
+    padding:5px 0 5px 20px; position:relative;
+    border-top:1px solid rgba(255,255,255,0.03);
+  }
+  .project-detail-text ul li:first-child{border-top:none;}
+  .project-detail-text ul li::before{
+    content:'›'; position:absolute; left:0; color:var(--cyan);
+  }
+  .project-detail-text ul li strong{
+    color:var(--text-main); font-weight:600;
+  }
+  .detail-code{
+    background:rgba(0,0,0,0.35);
+    border:1px solid var(--line);
+    border-left:3px solid var(--cyan);
+    border-radius:2px;
+    padding:14px 18px;
+    margin-bottom:14px;
+    overflow-x:auto;
+  }
+  .detail-code code{
+    font-family:var(--mono); font-size:12px; color:#a8d8f0;
+    white-space:pre; display:block; line-height:1.7;
+  }
+  .detail-cmd{
+    font-family:var(--mono); font-size:12px;
+    background:rgba(0,212,255,0.07); border:1px solid rgba(0,212,255,0.2);
+    color:var(--cyan); padding:8px 14px; border-radius:2px;
+    display:inline-block; margin-bottom:10px;
+  }
+  .detail-table{
+    width:100%; border-collapse:collapse;
+    font-family:var(--mono); font-size:12.5px;
+    margin-bottom:14px;
+  }
+  .detail-table th{
+    color:var(--teal); text-align:left;
+    padding:8px 14px; border-bottom:1px solid var(--line);
+    font-weight:600; letter-spacing:0.04em;
+  }
+  .detail-table td{
+    color:var(--text-dim); padding:8px 14px;
+    border-bottom:1px solid rgba(255,255,255,0.04);
+    vertical-align:top; line-height:1.5;
+  }
+  .detail-table tr:last-child td{border-bottom:none;}
+  .detail-table td:first-child{color:var(--text-main);}
+  .detail-result{
+    background:rgba(29,233,182,0.06);
+    border:1px solid rgba(29,233,182,0.2);
+    border-radius:2px; padding:14px 18px; margin-bottom:10px;
+    font-size:14px; color:var(--text-dim); line-height:1.7;
+  }
+  .detail-result strong{color:var(--teal);}
   .project-link-hint{
     font-family:var(--mono); font-size:11.5px !important;
     color:var(--teal) !important;
