@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -138,48 +137,63 @@ Ce portfolio présente les différents projets que j'ai réalisés au cours de m
               <div class="project-img-placeholder">+ Ajouter une capture (ex : poste déployé)</div>
             </div>
             <div class="project-detail-text">
-              <h4>Détail de la réalisation</h4>
-              <p>Contexte et objectif
-Dans le cadre d'un projet de lab personnel en 1ère année, j'ai mis en place une infrastructure complète de déploiement automatisé de postes Windows, reproduisant les pratiques utilisées en entreprise pour la gestion de parc informatique. L'objectif était de pouvoir déployer un poste Windows configuré et joint au domaine en quelques minutes, sans intervention manuelle sur chaque machine.
+              <div class="detail-section">
+                <h5>Contexte & objectif</h5>
+                <p>Mise en place d'une infrastructure complète de déploiement automatisé de postes Windows en lab Hyper-V, reproduisant les pratiques entreprise. Objectif : déployer un poste Windows configuré et joint au domaine en quelques minutes, sans intervention manuelle sur chaque machine.</p>
+              </div>
 
-Infrastructure mise en place
-L'environnement repose sur Microsoft Hyper-V avec trois types de machines virtuelles :
+              <div class="detail-section">
+                <h5>Infrastructure mise en place</h5>
+                <ul>
+                  <li><strong>Serveur FOG</strong> — Debian 12 (gén. 1 pour éviter les conflits EFI), héberge DHCP, TFTP, NFS et l'interface web. IP fixe : 192.168.1.120</li>
+                  <li><strong>Contrôleur de domaine</strong> — Windows Server avec AD DS + DNS intégré, domaine <code>gigafog.local</code>. IP fixe : 192.168.1.106</li>
+                  <li><strong>Poste master</strong> — Windows 10/11 servant de modèle de référence pour les captures</li>
+                </ul>
+              </div>
 
-Un serveur FOG sous Debian 12 (génération 1, pour éviter les conflits EFI) hébergeant les services DHCP, TFTP, NFS et l'interface web de gestion
-Un contrôleur de domaine Windows Server avec Active Directory DS et DNS intégré, domaine gigafog.local
-Un poste master Windows 10/11 servant de modèle de référence pour les déploiements
+              <div class="detail-section">
+                <h5>Préparation du poste master</h5>
+                <ul>
+                  <li>Désactivation de <strong>BitLocker</strong> pour permettre à FOG de monter la partition NTFS</li>
+                  <li>Désactivation de l'hibernation et du démarrage rapide : <span class="detail-cmd">powercfg /hibernate off</span></li>
+                  <li>Suppression du package <strong>MicrosoftOfficeHub</strong> qui bloquait Sysprep</li>
+                  <li>Installation du <strong>FOG Client</strong> (agent léger) pour la jonction automatique au domaine</li>
+                  <li>Création d'un fichier <strong>unattend.xml</strong> pour bypasser l'écran OOBE au premier démarrage</li>
+                  <li>Exécution de <span class="detail-cmd">Sysprep /generalize /oobe /shutdown</span> pour généraliser l'image</li>
+                </ul>
+              </div>
 
-Le réseau a été soigneusement planifié avec des adresses IP fixes pour les serveurs (AD : 192.168.1.106, FOG : 192.168.1.120) et une plage DHCP pour les postes clients, avec distribution automatique du DNS et du suffixe de domaine via les options DHCP de FOG.
+              <div class="detail-section">
+                <h5>Configuration du serveur FOG</h5>
+                <ul>
+                  <li><strong>DHCP</strong> — options <code>domain-name-servers</code> et <code>domain-name</code> pour distribution automatique du DNS</li>
+                  <li><strong>NFS</strong> — création des dossiers <code>/images</code> et <code>/images/dev</code> avec fichiers <code>.mntcheck</code></li>
+                  <li><strong>AD Defaults</strong> — identifiants de jonction au domaine configurés dans l'interface FOG</li>
+                </ul>
+              </div>
 
-Préparation du poste master
-La préparation du poste master a nécessité plusieurs étapes préalables avant toute capture :
+              <div class="detail-section">
+                <h5>Processus de capture & déploiement</h5>
+                <p>La capture s'effectue via boot PXE : le poste master démarre sur le réseau, FOG le reconnaît par son adresse MAC et lance la capture en mode <strong>Multiple Partition Image - Single Disk</strong>, préservant toutes les partitions (EFI, MSR, système, récupération).</p>
+                <p>Le déploiement suit le même principe : VM vide → boot PXE → Quick Registration → assignation image + jonction AD → lancement. Le FOG Client exécute la jonction au domaine automatiquement en fin de processus.</p>
+              </div>
 
-Désactivation de BitLocker pour permettre à FOG de monter la partition NTFS en lecture
-Désactivation de l'hibernation et du démarrage rapide (powercfg /hibernate off) pour éviter l'état "unclean filesystem" au moment de la capture
-Suppression du package MicrosoftOfficeHub qui bloquait systématiquement le processus Sysprep
-Installation du FOG Client (agent léger) permettant la communication entre le poste déployé et le serveur FOG pour l'exécution automatique des tâches post-déploiement
-Création d'un fichier de réponse unattend.xml pour bypasser l'écran OOBE (Out-Of-Box Experience) au premier démarrage, permettant à l'utilisateur d'arriver directement sur l'écran de connexion Windows sans passer par les étapes de configuration initiale
-Sysprep (/generalize /oobe /shutdown) pour généraliser l'image (nouveau SID unique pour chaque clone, suppression des informations spécifiques à la machine)
+              <div class="detail-section">
+                <h5>Difficultés rencontrées & solutions</h5>
+                <table class="detail-table">
+                  <tr><th>Difficulté</th><th>Solution apportée</th></tr>
+                  <tr><td>Erreur Exec format error au boot PXE</td><td>Passage de snponly.efi à ipxe.efi dans la config DHCP</td></tr>
+                  <tr><td>BitLocker bloquant la capture</td><td>Désactivation complète avant Sysprep</td></tr>
+                  <tr><td>Sysprep bloqué par MicrosoftOfficeHub</td><td>Suppression du package via PowerShell avant Sysprep</td></tr>
+                  <tr><td>DHCP FOG distribuant le mauvais DNS</td><td>Ajout manuel des options dans dhcpd.conf</td></tr>
+                  <tr><td>Conflit d'IP entre AD et FOG</td><td>Attribution d'IPs fixes distinctes sur chaque serveur</td></tr>
+                  <tr><td>Partition NTFS en état "unclean"</td><td>Désactivation du démarrage rapide et extinction propre</td></tr>
+                </table>
+              </div>
 
-
-Configuration du serveur FOG
-Côté serveur, plusieurs configurations ont été nécessaires :
-
-DHCP : configuration des options domain-name-servers et domain-name pour que chaque machine déployée reçoive automatiquement le bon serveur DNS et le suffixe de domaine sans manipulation manuelle
-NFS : création des dossiers /images et /images/dev avec les fichiers .mntcheck nécessaires au montage par FOG lors des captures/déploiements
-Active Directory Defaults : configuration dans l'interface FOG des identifiants de jonction au domaine (nom de domaine, compte Administrateur, mot de passe) appliqués automatiquement à chaque déploiement
-
-
-Processus de capture et déploiement
-La capture de l'image s'effectue via boot PXE : le poste master (éteint après Sysprep) démarre sur le réseau, FOG le reconnaît par son adresse MAC et lance automatiquement la capture en mode Multiple Partition Image - Single Disk, préservant toutes les partitions Windows (EFI, MSR, système, récupération).
-Le déploiement sur une nouvelle VM suit le même principe : création d'une VM vide sans OS, boot PXE, enregistrement dans FOG via Quick Registration, assignation de l'image et configuration de la jonction AD, puis lancement du déploiement. En fin de processus, le FOG Client exécute automatiquement la jonction au domaine gigafog.local et redémarre la machine — qui est alors immédiatement utilisable avec un compte de domaine.
-
-Difficultés rencontrées et solutions
-DifficultéSolution apportéeErreur Exec format error au boot PXEPassage de snponly.efi à ipxe.efi dans la config DHCPBitLocker bloquant la captureDésactivation complète avant SysprepSysprep bloqué par MicrosoftOfficeHubSuppression du package via PowerShell avant SysprepDHCP FOG distribuant le mauvais DNSAjout manuel des options domain-name-servers dans dhcpd.confConflit d'IP entre serveur AD et FOGAttribution d'IPs fixes distinctes sur chaque serveurFOG Client déclenchant un redémarrage intempestifDésactivation temporaire de la tâche AD join sur le host masterPartition NTFS en état "unclean"Désactivation du démarrage rapide et extinction propre avant capture
-
-Résultat
-La chaîne de déploiement est pleinement fonctionnelle : à partir d'une VM vide, le déploiement complet (boot PXE → image → jonction domaine → prêt à l'emploi) s'effectue en environ 15 à 20 minutes sans aucune intervention manuelle, contre plusieurs heures pour une installation Windows traditionnelle poste par poste.</p>
-              <p class="project-link-hint">Remplace ce texte et les images par les détails réels de ton projet.</p>
+              <div class="detail-result">
+                <strong>Résultat :</strong> déploiement complet (boot PXE → image → jonction domaine → prêt à l'emploi) en <strong>15 à 20 minutes</strong> sans aucune intervention manuelle, contre plusieurs heures pour une installation Windows traditionnelle poste par poste.
+              </div>
             </div>
           </div>
         </div>
@@ -203,21 +217,24 @@ La chaîne de déploiement est pleinement fonctionnelle : à partir d'une VM vid
               <div class="project-img-placeholder">+ Ajouter une capture (ex : interface Rocket.Chat)</div>
             </div>
             <div class="project-detail-text">
-              <h4>Détail de la réalisation</h4>
-              <p>Contexte et objectif
-Dans le cadre d'un projet personnel, j'ai déployé une solution de messagerie collaborative auto-hébergée en remplacement d'outils cloud comme Slack ou Teams, dans une logique de souveraineté des données et de maîtrise de l'infrastructure. L'objectif était de mettre en place un service de communication interne opérationnel, administrable et indépendant de tout service tiers.
+              <div class="detail-section">
+                <h5>Contexte & objectif</h5>
+                <p>Déploiement d'une solution de messagerie collaborative auto-hébergée en remplacement d'outils cloud (Slack, Teams), dans une logique de souveraineté des données. Objectif : un service de communication interne opérationnel, administrable et indépendant de tout service tiers.</p>
+              </div>
 
-Infrastructure mise en place
-Le déploiement repose sur une VM dédiée (Debian/Ubuntu) hébergeant l'ensemble de la stack via Docker Compose, composée de deux conteneurs principaux :
+              <div class="detail-section">
+                <h5>Infrastructure mise en place</h5>
+                <ul>
+                  <li><strong>VM dédiée</strong> — Debian/Ubuntu hébergeant la stack Docker Compose</li>
+                  <li><strong>Rocket.Chat</strong> — application de messagerie web accessible via navigateur</li>
+                  <li><strong>MongoDB 5.0</strong> — base de données pour les messages, utilisateurs et configurations</li>
+                </ul>
+                <p>Volumes persistants Docker pour garantir la conservation des données entre redémarrages et mises à jour.</p>
+              </div>
 
-Rocket.Chat : l'application de messagerie web
-MongoDB : la base de données utilisée par Rocket.Chat pour stocker les messages, utilisateurs et configurations
-
-L'utilisation de Docker Compose permet de gérer les deux services de manière cohérente (démarrage, arrêt, mise à jour) via un fichier docker-compose.yml unique, avec des volumes persistants pour garantir la conservation des données même en cas de redémarrage ou de mise à jour des conteneurs.
-
-Déploiement via Docker Compose
-Le fichier docker-compose.yml définit les deux services avec leurs dépendances, variables d'environnement et volumes :
-yamlversion: '3'
+              <div class="detail-section">
+                <h5>Fichier docker-compose.yml</h5>
+                <div class="detail-code"><code>version: '3'
 services:
   rocketchat:
     image: rocket.chat:latest
@@ -234,32 +251,34 @@ services:
     image: mongo:5.0
     restart: always
     volumes:
-      - ./data/db:/data/db
-Le démarrage s'effectue avec :
-bashdocker compose up -d
+      - ./data/db:/data/db</code></div>
+                <p>Démarrage de la stack :</p>
+                <span class="detail-cmd">docker compose up -d</span>
+              </div>
 
-Configuration de Rocket.Chat
-Une fois l'instance démarrée et accessible via le navigateur, plusieurs éléments ont été configurés :
-Gestion des utilisateurs et rôles :
+              <div class="detail-section">
+                <h5>Configuration de Rocket.Chat</h5>
+                <ul>
+                  <li><strong>Compte administrateur</strong> principal créé au premier lancement</li>
+                  <li><strong>Comptes utilisateurs</strong> supplémentaires créés pour les tests</li>
+                  <li><strong>Rôles attribués</strong> : admin, user, moderator — permissions configurées par rôle</li>
+                  <li><strong>Configuration générale</strong> : nom d'instance, logo, options d'inscription, notifications</li>
+                </ul>
+              </div>
 
-Création d'un compte administrateur principal
-Création de comptes utilisateurs supplémentaires pour les tests
-Attribution des rôles : admin, user, moderator selon les besoins
-Configuration des permissions par rôle (qui peut créer des canaux, inviter des membres, supprimer des messages, etc.)
+              <div class="detail-section">
+                <h5>Difficultés rencontrées & solutions</h5>
+                <table class="detail-table">
+                  <tr><th>Difficulté</th><th>Solution apportée</th></tr>
+                  <tr><td>MongoDB incompatible avec Rocket.Chat</td><td>Utilisation de MongoDB 5.0 spécifiquement requis</td></tr>
+                  <tr><td>Perte des données après redémarrage</td><td>Ajout de volumes Docker montés sur le système hôte</td></tr>
+                  <tr><td>Accès admin bloqué</td><td>Reconfiguration via variables d'environnement au premier démarrage</td></tr>
+                </table>
+              </div>
 
-Configuration générale :
-
-Personnalisation du nom de l'instance et du logo
-Paramétrage des options d'inscription (inscription ouverte ou sur invitation uniquement)
-Configuration des notifications
-
-
-Difficultés rencontrées et solutions
-DifficultéSolution apportéeVersion MongoDB incompatible avec Rocket.ChatUtilisation de MongoDB 5.0 spécifiquement requis par la version de Rocket.ChatPersistance des données après redémarrageAjout de volumes Docker montés sur le système hôteAccès à l'interface d'administration bloquéReconfiguration du compte admin via les variables d'environnement au premier démarrage
-
-Résultat
-L'instance Rocket.Chat est pleinement opérationnelle et accessible depuis le réseau local. Les utilisateurs peuvent s'authentifier, communiquer via des messages directs et des canaux, avec une administration centralisée des comptes et des permissions.</p>
-              <p class="project-link-hint">Remplace ce texte et les images par les détails réels de ton projet.</p>
+              <div class="detail-result">
+                <strong>Résultat :</strong> instance Rocket.Chat pleinement opérationnelle sur le réseau local. Authentification, messagerie directe et canaux fonctionnels, avec <strong>administration centralisée</strong> des comptes et des permissions.
+              </div>
             </div>
           </div>
         </div>
